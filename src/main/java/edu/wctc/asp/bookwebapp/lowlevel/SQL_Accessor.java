@@ -61,12 +61,12 @@ public class SQL_Accessor implements DatabaseAccessorStrategy {
     }
 
     @Override
-    public void deleteRecords(Object table, Object primaryKeyColumn,
+    public void deleteRecords(Object db, Object table, Object primaryKeyColumn,
             List<Object> primaryKeys) throws SQLException, ClassNotFoundException {
         try {
             openDatabaseConnection();
             PreparedStatement pstmt;
-            String query = "DELETE FROM " + table + " WHERE " + primaryKeyColumn + "= ?";
+            String query = "DELETE FROM " + db + "." + table + " WHERE " + primaryKeyColumn + "= ?";
             for (Object obj : primaryKeys) {
                 pstmt = sql_conn.prepareStatement(query);
                 pstmt.setObject(1, obj.toString());
@@ -77,9 +77,9 @@ public class SQL_Accessor implements DatabaseAccessorStrategy {
         }
 
     }
-    
+
     @Override
-       public void createRecord(String tableName, List<Object> columns, List<Object> values) throws ClassNotFoundException, SQLException {
+    public void createRecord(String tableName, List<Object> columns, List<Object> values) throws ClassNotFoundException, SQLException {
 
         StringBuilder sb = new StringBuilder("INSERT INTO " + tableName + " (");
         try {
@@ -180,14 +180,10 @@ public class SQL_Accessor implements DatabaseAccessorStrategy {
         }
         return list;
     }
-    
-        @Override
-    public List getJoinedRecords(Object table, Object tablePrimaryKey, Object joiningTable, Object joiningTablePK) throws ClassNotFoundException, SQLException {
-        StringBuilder query = new StringBuilder("SELECT * FROM ");
-        query.append(table).append(" JOIN ").append(joiningTable)
-                .append(" ON ").append(table).append(".").append(tablePrimaryKey)
-                .append("=").append(joiningTable).append(".").append(joiningTablePK);
-        
+
+    @Override
+    public List getJoinedRecords(Object db,Object table, Object tablePrimaryKey,
+            Object joiningTable, Object joiningTablePK) throws ClassNotFoundException, SQLException {
         List<Map<String, Object>> list = null;
         Map map = null;
         Statement stmt = null;
@@ -196,7 +192,7 @@ public class SQL_Accessor implements DatabaseAccessorStrategy {
         try {
             openDatabaseConnection();
             stmt = sql_conn.createStatement();
-            rs = stmt.executeQuery(query.toString());
+            rs = stmt.executeQuery(getJoinBuilder(db, table,tablePrimaryKey,joiningTable,joiningTablePK).toString());
             md = rs.getMetaData();
             int columnCount = md.getColumnCount();
             list = new ArrayList();
@@ -215,11 +211,23 @@ public class SQL_Accessor implements DatabaseAccessorStrategy {
 
         } catch (SQLException | ClassNotFoundException se) {
             se.getLocalizedMessage();
+            System.out.println("failed");
         } finally {
             stmt.close();
             closeDatabaseConnection();
         }
+        System.out.println("List size:" +list.size());
         return list;
+    }
+
+    public StringBuilder getJoinBuilder(Object dbName, Object table, Object tablePrimaryKey, Object joiningTable, Object joiningForeignKey) {
+
+        StringBuilder sb = new StringBuilder("SELECT * FROM ").append(dbName)
+                .append(".").append(table).append(" JOIN ").append(dbName).append(".").append(joiningTable)
+                .append(" ON ").append(joiningTable).append(".").append(joiningForeignKey)
+                .append("=").append(table).append(".").append(joiningForeignKey);
+        System.out.println(sb.toString());
+        return sb;
     }
 
 //    @Override
@@ -257,16 +265,13 @@ public class SQL_Accessor implements DatabaseAccessorStrategy {
 //        }
 //        return record;
 //    }
-
-    
-
     public static void main(String[] args) throws Exception {
         SQL_Data_Provider dp = new SQL_Data_Provider("com.mysql.jdbc.Driver", "jdbc:mysql://localhost:3306/Client?zeroDateTimeBehavior=convertToNull",
                 "root", "root");
         SQL_Accessor accessor = new SQL_Accessor(dp);
         accessor.openDatabaseConnection();
         accessor.closeDatabaseConnection();
-        
-        System.out.println(accessor.getJoinedRecords("Library.Book","BookID", "Library.Author", "AuthorID"));
+
+//        System.out.println(accessor.getJoinedRecords("Library.Book", "BookID", "Library.Author", "AuthorID"));
     }
 }

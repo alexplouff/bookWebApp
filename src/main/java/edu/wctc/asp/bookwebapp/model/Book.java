@@ -14,47 +14,53 @@ import java.util.Date;
  *
  * @author alex
  */
-public class Book {
+public class Book implements BookStrategy {
 
     private static final String DATE_FORMAT = "yyyy-MM-dd";
+    private static final String DIGIT_REG_EX = "\\d+";
 
     private int bookID, authorID;
     private String title;
     private Date datePublished;
     private AuthorStrategy author;
+    
 
     public Book() {
     }
-
-    public Book(String authorID, String title, String datePublished, AuthorStrategy author) throws ParseException {
-        setAuthorID(authorID);
+    
+    public Book(String title, Date datePublished, AuthorStrategy author) throws ParseException {
         setTitle(title);
         setDatePublished(datePublished);
         setAuthor(author);
     }
 
-    public Book(String bookID, String authorID, String title, String datePublished, AuthorStrategy author) throws ParseException {
+    public Book(String title, String datePublished, AuthorStrategy author) throws ParseException {
+        setTitle(title);
+        setDatePublished(datePublished);
+        setAuthor(author);
+    }
+
+    public Book(int bookID, String title, Date datePublished, AuthorStrategy author) throws ParseException {
         setBookID(bookID);
-        setAuthorID(authorID);
         setTitle(title);
         setDatePublished(datePublished);
         setAuthor(author);
     }
-
-    public Book(int bookID, int authorID, String title, Date datePublished, AuthorStrategy author) throws ParseException {
+    
+    public Book(int bookID, String title, String datePublished, AuthorStrategy author) throws ParseException {
         setBookID(bookID);
-        setAuthorID(authorID);
         setTitle(title);
         setDatePublished(datePublished);
         setAuthor(author);
     }
 
+    @Override
     public int getBookID() {
         return bookID;
     }
 
     public final void setBookID(String bookID) throws IllegalArgumentException {
-        if (bookID.matches("\\d+")) {
+        if (bookID.matches(DIGIT_REG_EX)) {
             this.bookID = Integer.valueOf(bookID);
         } else {
             throw new IllegalArgumentException("Digits Only");
@@ -68,12 +74,13 @@ public class Book {
         this.bookID = bookID;
     }
 
+    @Override
     public int getAuthorID() {
         return authorID;
     }
 
     public final void setAuthorID(String authorID) throws IllegalArgumentException {
-        if (authorID.matches("\\d+")) {
+        if (authorID.matches(DIGIT_REG_EX)) {
             this.authorID = Integer.valueOf(authorID);
         } else {
             throw new IllegalArgumentException("Digits Only");
@@ -88,6 +95,7 @@ public class Book {
         }
     }
 
+    @Override
     public String getTitle() {
         return title;
     }
@@ -100,6 +108,7 @@ public class Book {
         }
     }
 
+    @Override
     public Date getDatePublished() {
         return datePublished;
     }
@@ -121,6 +130,7 @@ public class Book {
         }
     }
 
+    @Override
     public AuthorStrategy getAuthor() {
         return author;
     }

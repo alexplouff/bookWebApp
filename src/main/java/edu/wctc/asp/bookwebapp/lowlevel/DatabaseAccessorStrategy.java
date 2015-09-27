@@ -21,7 +21,7 @@ public interface DatabaseAccessorStrategy {
     
      public abstract void createRecord(String tableName, List<Object> columns, List<Object> values) throws ClassNotFoundException, SQLException;
      
-     public abstract void deleteRecords(Object table, Object primaryKeyColumn,
+     public abstract void deleteRecords(Object db,Object table, Object primaryKeyColumn,
             List<Object> primaryKeys) throws SQLException, ClassNotFoundException;
      
      public abstract void updateRecord(Object table, List<Object> columns, List<Object> values,
@@ -32,5 +32,5 @@ public interface DatabaseAccessorStrategy {
      
      public abstract  List getRecords(Object table) throws ClassNotFoundException, SQLException;
      
-     public abstract  List getJoinedRecords(Object table, Object tablePrimaryKey, Object joiningTable, Object joiningTablePK) throws ClassNotFoundException, SQLException;
+     public abstract  List getJoinedRecords(Object dbName, Object table, Object tablePrimaryKey, Object joiningTable, Object joiningTablePK) throws ClassNotFoundException, SQLException;
 }

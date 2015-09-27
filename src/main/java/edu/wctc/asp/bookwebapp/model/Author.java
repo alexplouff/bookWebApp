@@ -39,10 +39,10 @@ public class Author implements AuthorStrategy {
     }
 
     public final void setFirstName(String firstName) throws IllegalArgumentException {
-        if (this.firstName != null) {
-            this.firstName = firstName;
+        if (this.firstName == null) {
+             throw new IllegalArgumentException("First Name Can Not Be Empty");
         } else {
-            throw new IllegalArgumentException("First Name Can Not Be Empty");
+            this.firstName = firstName;
         }
     }
 
@@ -51,11 +51,11 @@ public class Author implements AuthorStrategy {
         return lastName;
     }
 
-    public final void setLastName(String lastName) {
-        if (this.lastName != null) {
-            this.lastName = lastName;
-        } else {
+    public final void setLastName(String lastName) throws IllegalArgumentException{
+        if (this.lastName == null) {
             throw new IllegalArgumentException("Last Name Can Not Be Empty");
+        } else {
+            this.firstName = lastName;
         }
     }
 
