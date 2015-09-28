@@ -47,10 +47,32 @@ public class Book implements BookStrategy {
         setAuthor(author);
     }
     
-    public Book(int bookID, String title, String datePublished, AuthorStrategy author) throws ParseException {
+    public Book(String bookID, String title, String datePublished, AuthorStrategy author) throws ParseException {
         setBookID(bookID);
         setTitle(title);
         setDatePublished(datePublished);
+        setAuthor(author);
+    }
+    
+    public Book(String bookID, String title, String datePublished, String authorID) throws ParseException {
+        setBookID(bookID);
+        setTitle(title);
+        setDatePublished(datePublished);
+        setAuthorID(authorID);
+    }
+    
+    public Book(int bookID, String title, String datePublished, int authorID) throws ParseException {
+        setBookID(bookID);
+        setTitle(title);
+        setDatePublished(datePublished);
+        setAuthorID(authorID);
+    }
+    
+    public Book(int bookID, String title, String datePublished, int authorID, Author author) throws ParseException {
+        setBookID(bookID);
+        setTitle(title);
+        setDatePublished(datePublished);
+        setAuthorID(authorID);
         setAuthor(author);
     }
 

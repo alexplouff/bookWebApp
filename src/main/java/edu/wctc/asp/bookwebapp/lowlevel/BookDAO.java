@@ -10,6 +10,7 @@ import edu.wctc.asp.bookwebapp.model.AuthorStrategy;
 import edu.wctc.asp.bookwebapp.model.Book;
 import edu.wctc.asp.bookwebapp.model.BookStrategy;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +19,7 @@ import java.util.Map;
  *
  * @author alex
  */
-public class BookDAO {
+public class BookDAO implements DAO_Strategy {
 
     private DatabaseAccessorStrategy accessor;
 
@@ -65,18 +66,19 @@ public class BookDAO {
         }
     }
     
-    public List getAllRecords() throws Exception{
+    @Override
+    public List getAllRecords() throws SQLException, ParseException, ClassNotFoundException{
         List<Map<String,Object>> rawRecord =
                 accessor.getJoinedRecords(DATABASE,BOOK_TABLE, BOOK_PRIMARY_KEY,
                                             AUTHOR_TABLE, AUTHOR_PRIMARY_KEY);   // "Author.AuthorID
         
         List<BookStrategy> bookList = new ArrayList<>(); 
         for(Map<String,Object> values : rawRecord){
-            Object o = values.get("BookID");
+            Object o = values.get(BOOK_PRIMARY_KEY);
             int bookID = (o == null) ? 00 : Integer.valueOf(o.toString());
-            o = values.get("title");
+            o = values.get(BOOK_TITLE_COLUMN);
             String title = (o == null) ? NULL_REPLACEMENT_VALUE : o.toString();
-            o = values.get("DatePublished");
+            o = values.get(DATE_PUBLISHED_COLUMN);
             String date = (o == null) ? NULL_REPLACEMENT_VALUE : o.toString();
             o = values.get(AUTHOR_PRIMARY_KEY);
             int authorID = (o == null) ? 00 : Integer.valueOf(o.toString());
@@ -85,18 +87,19 @@ public class BookDAO {
             o = values.get(AUTHOR_LAST_NAME_COLUMN);
             String lastName = (o == null) ? NULL_REPLACEMENT_VALUE : o.toString();
             
-            BookStrategy book = new Book(bookID, title, date, new Author(authorID, firstName, lastName));
+            BookStrategy book = new Book(bookID, title, date, authorID, new Author(authorID, firstName, lastName));
             bookList.add(book);
         }
         
-        System.out.println("sucess");
         return bookList;
     }
     
+    @Override
     public void deleteRecords(List<Object> values) throws SQLException, ClassNotFoundException{
         accessor.deleteRecords(DATABASE, BOOK_TABLE, BOOK_PRIMARY_KEY, values);
     }
     
+    @Override
     public void createNewBook(BookStrategy book) throws SQLException, ClassNotFoundException{
         
         List values = new ArrayList();
@@ -108,6 +111,7 @@ public class BookDAO {
        
     }
     
+    @Override
     public void createNewAuthor(Author author) throws SQLException, ClassNotFoundException{
         
         List values = new ArrayList();
@@ -118,10 +122,25 @@ public class BookDAO {
        
     }
     
-    public void updateBookByID(){
+    @Override
+    public void updateBookByID(BookStrategy book) throws SQLException, ClassNotFoundException{
+        List values = new ArrayList();
+        values.add(book.getBookID());
+        values.add(book.getTitle());
+        values.add(book.getDatePublished());
+        values.add(book.getAuthorID());
         
+        accessor.updateRecord(DATABASE.concat(".".concat(BOOK_TABLE)), BOOK_COLUMNS, values, BOOK_PRIMARY_KEY, book.getBookID());
+    }
+    
+    @Override
+    public void updateAuthorByID(AuthorStrategy author) throws SQLException, ClassNotFoundException{
+        List values = new ArrayList();
+        values.add(author.getId());
+        values.add(author.getFirstName());
+        values.add(author.getLastName());
         
-        accessor.updateRecord(table, BOOK_COLUMNS, values, pkc, pk);
+        accessor.updateRecord(DATABASE.concat(".".concat(BOOK_TABLE)), AUTHOR_COLUMNS, values, AUTHOR_PRIMARY_KEY, author.getId());
     }
     
     
@@ -134,8 +153,10 @@ public class BookDAO {
         book.setTitle("Homage To Catalonia");
         book.setDatePublished("1938-04-25");
         book.setAuthorID("2");
+        book.setBookID(8);
+                
       //  dao.deleteRecords(list);
-        dao.createNewBook(book);
+        dao.updateBookByID(book);
     }
 
 }

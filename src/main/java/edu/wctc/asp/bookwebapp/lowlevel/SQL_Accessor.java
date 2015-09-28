@@ -216,7 +216,6 @@ public class SQL_Accessor implements DatabaseAccessorStrategy {
             stmt.close();
             closeDatabaseConnection();
         }
-        System.out.println("List size:" +list.size());
         return list;
     }
 
