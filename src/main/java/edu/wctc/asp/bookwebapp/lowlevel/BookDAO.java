@@ -71,7 +71,7 @@ public class BookDAO implements DAO_Strategy {
         List<Map<String,Object>> rawRecord =
                 accessor.getJoinedRecords(DATABASE,BOOK_TABLE, BOOK_PRIMARY_KEY,
                                             AUTHOR_TABLE, AUTHOR_PRIMARY_KEY);   // "Author.AuthorID
-        
+        rawRecord.remove(3);
         List<BookStrategy> bookList = new ArrayList<>(); 
         for(Map<String,Object> values : rawRecord){
             Object o = values.get(BOOK_PRIMARY_KEY);

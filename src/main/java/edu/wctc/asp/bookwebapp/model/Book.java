@@ -47,11 +47,10 @@ public class Book implements BookStrategy {
         setAuthor(author);
     }
     
-    public Book(String bookID, String title, String datePublished, AuthorStrategy author) throws ParseException {
+    public Book(String bookID, String title, String datePublished) throws ParseException {
         setBookID(bookID);
         setTitle(title);
         setDatePublished(datePublished);
-        setAuthor(author);
     }
     
     public Book(String bookID, String title, String datePublished, String authorID) throws ParseException {
@@ -126,7 +125,7 @@ public class Book implements BookStrategy {
         if (title.length() > 1) {
             this.title = title;
         } else {
-            throw new IllegalArgumentException("Title Must Be Greater Than 2 Characters;");
+            throw new IllegalArgumentException("Title Must Be Greater Than 1 Character;");
         }
     }
 

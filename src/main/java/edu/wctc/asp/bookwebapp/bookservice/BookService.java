@@ -11,10 +11,8 @@ import edu.wctc.asp.bookwebapp.lowlevel.SQL_Accessor;
 import edu.wctc.asp.bookwebapp.lowlevel.SQL_Data_Provider;
 import edu.wctc.asp.bookwebapp.model.Author;
 import edu.wctc.asp.bookwebapp.model.Book;
-import edu.wctc.asp.bookwebapp.model.BookStrategy;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,7 +37,7 @@ public class BookService {
     
     public void createBook(List values) throws SQLException, ParseException, ClassNotFoundException{
         dao.createNewBook(
-                new Book(values.get(0).toString(), values.get(1).toString(), values.get(2).toString(), values.get(3).toString()));
+                new Book(values.get(0).toString(), values.get(1).toString(), values.get(2).toString()));
     }
 
     public void updateBookByID(List values) throws SQLException, ClassNotFoundException, ParseException {
