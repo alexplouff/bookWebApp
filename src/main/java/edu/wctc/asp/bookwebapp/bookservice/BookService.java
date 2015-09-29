@@ -54,7 +54,7 @@ public class BookService {
         dao.deleteRecords(values);
     }
 
-    public List getAllBookRecords() throws Exception {
+    public List getAllBookRecords() throws SQLException, ClassNotFoundException, ParseException {
         return dao.getAllRecords();
     }
 

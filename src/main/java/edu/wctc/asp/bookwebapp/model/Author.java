@@ -55,7 +55,7 @@ public class Author implements AuthorStrategy {
 //        if (this.lastName == null) {
 //            throw new IllegalArgumentException("Last Name Can Not Be Empty");
 //        } else {
-            this.firstName = lastName;
+            this.lastName = lastName;
      //   }
     }
 

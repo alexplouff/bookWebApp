@@ -28,39 +28,21 @@ public class Book implements BookStrategy {
     public Book() {
     }
     
-    public Book(String title, Date datePublished, AuthorStrategy author) throws ParseException {
+    public Book(String title, Date datePublished, int authorID, AuthorStrategy author) throws ParseException {
         setTitle(title);
         setDatePublished(datePublished);
+        setAuthorID(authorID);
         setAuthor(author);
     }
 
-    public Book(String title, String datePublished, AuthorStrategy author) throws ParseException {
-        setTitle(title);
-        setDatePublished(datePublished);
-        setAuthor(author);
-    }
-
-    public Book(int bookID, String title, Date datePublished, AuthorStrategy author) throws ParseException {
-        setBookID(bookID);
-        setTitle(title);
-        setDatePublished(datePublished);
-        setAuthor(author);
-    }
-    
-    public Book(String bookID, String title, String datePublished) throws ParseException {
-        setBookID(bookID);
-        setTitle(title);
-        setDatePublished(datePublished);
-    }
-    
-    public Book(String bookID, String title, String datePublished, String authorID) throws ParseException {
+    public Book(String title, String datePublished, String authorID) throws ParseException { //Service Create
         setBookID(bookID);
         setTitle(title);
         setDatePublished(datePublished);
         setAuthorID(authorID);
     }
     
-    public Book(int bookID, String title, String datePublished, int authorID) throws ParseException {
+    public Book(String bookID, String title, String datePublished, String authorID) throws ParseException { //Service Update
         setBookID(bookID);
         setTitle(title);
         setDatePublished(datePublished);

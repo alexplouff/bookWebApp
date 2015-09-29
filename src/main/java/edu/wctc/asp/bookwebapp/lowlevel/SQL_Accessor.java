@@ -224,7 +224,8 @@ public class SQL_Accessor implements DatabaseAccessorStrategy {
         StringBuilder sb = new StringBuilder("SELECT * FROM ").append(dbName)
                 .append(".").append(table).append(" JOIN ").append(dbName).append(".").append(joiningTable)
                 .append(" ON ").append(joiningTable).append(".").append(joiningForeignKey)
-                .append("=").append(table).append(".").append(joiningForeignKey);
+                .append("=").append(table).append(".").append(joiningForeignKey)
+                .append(" ORDER BY ").append(table).append(".").append(tablePrimaryKey);
         System.out.println(sb.toString());
         return sb;
     }

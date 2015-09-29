@@ -9,6 +9,7 @@ import edu.wctc.asp.bookwebapp.model.Author;
 import edu.wctc.asp.bookwebapp.model.AuthorStrategy;
 import edu.wctc.asp.bookwebapp.model.BookStrategy;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -23,7 +24,7 @@ public interface DAO_Strategy {
 
     public abstract void deleteRecords(List<Object> values) throws SQLException, ClassNotFoundException;
 
-    public abstract List getAllRecords() throws Exception;
+    public abstract List getAllRecords() throws SQLException, ClassNotFoundException, ParseException;
 
     public abstract void updateAuthorByID(AuthorStrategy author) throws SQLException, ClassNotFoundException;
 

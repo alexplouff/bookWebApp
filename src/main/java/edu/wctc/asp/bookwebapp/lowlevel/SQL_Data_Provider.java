@@ -5,7 +5,6 @@
  */
 package edu.wctc.asp.bookwebapp.lowlevel;
 
-import com.mysql.jdbc.Connection;
 
 /**
  *
@@ -52,11 +51,6 @@ public class SQL_Data_Provider {
 
     public final void setPassword(String password) {
         this.password = password;
-    }
-    
-    public static void main(String[] args) {
-        SQL_Data_Provider sql_data = new SQL_Data_Provider("com.mysql.jdbc.Driver", "jdbc:mysql://localhost:3306/Client?zeroDateTimeBehavior=convertToNull",
-                "root", "root");
     }
     
     
