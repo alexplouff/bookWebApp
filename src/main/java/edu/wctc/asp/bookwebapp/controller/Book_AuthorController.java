@@ -34,6 +34,7 @@ public class Book_AuthorController extends HttpServlet {
     
     private String resultPage;
     
+   
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -57,7 +58,7 @@ public class Book_AuthorController extends HttpServlet {
                 new SQL_Data_Provider(driverClass, dbURL, dbUserName, password))));
 
         List<BookStrategy> bookRecords;
-
+        List<String> values;
         try {
             bookRecords = service.getAllBookRecords();
             request.setAttribute("bookRecordsResult", bookRecords);
@@ -65,6 +66,29 @@ public class Book_AuthorController extends HttpServlet {
         } catch (SQLException | ClassNotFoundException | ParseException ex) {
             request.setAttribute("bookRecordsResult", ex.toString());
         }
+        
+        String submit = request.getParameter("submit");
+        
+        if(submit != null){
+            String title = request.getParameter("title");
+            String datePublished = request.getParameter("datePublished");
+            String authorID = request.getParameter("authorID");
+            
+            try{
+            values = new ArrayList<>();
+            values.add(title);
+            values.add(datePublished);
+            values.add(authorID);
+            
+            service.createBook(values);
+            bookRecords = service.getAllBookRecords();
+            request.setAttribute("bookRecordsResult", bookRecords);
+            } catch(SQLException | ClassNotFoundException | ParseException ex) {
+                request.setAttribute("error", ex.toString());
+            }
+        }
+        
+        
 
         
                 RequestDispatcher view = request.getRequestDispatcher(resultPage);

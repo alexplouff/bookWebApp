@@ -36,7 +36,6 @@ public class Book implements BookStrategy {
     }
 
     public Book(String title, String datePublished, String authorID) throws ParseException { //Service Create
-        setBookID(bookID);
         setTitle(title);
         setDatePublished(datePublished);
         setAuthorID(authorID);
