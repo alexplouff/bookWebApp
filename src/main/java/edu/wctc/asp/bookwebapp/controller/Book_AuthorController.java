@@ -15,6 +15,7 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -31,10 +32,8 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "Book_AuthorController", urlPatterns = {"/bookAuthorControls"})
 public class Book_AuthorController extends HttpServlet {
 
-    
     private String resultPage;
-    
-   
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -53,50 +52,55 @@ public class Book_AuthorController extends HttpServlet {
         String dbURL = (String) ctx.getInitParameter("db.driver.url");
         String dbUserName = (String) ctx.getInitParameter("db.userName");
         String password = (String) ctx.getInitParameter("db.password");
-        
+
         BookService service = new BookService(new BookDAO(new SQL_Accessor(
                 new SQL_Data_Provider(driverClass, dbURL, dbUserName, password))));
 
-        List<BookStrategy> bookRecords;
         List<String> values;
         try {
-            bookRecords = service.getAllBookRecords();
-            request.setAttribute("bookRecordsResult", bookRecords);
+            request.setAttribute("bookRecordsResult", service.getAllBookRecords());
             resultPage = "book_authorRecords.jsp";
         } catch (SQLException | ClassNotFoundException | ParseException ex) {
             request.setAttribute("bookRecordsResult", ex.toString());
         }
-        
-        String submit = request.getParameter("submit");
-        
-        if(submit != null){
-            String title = request.getParameter("title");
-            String datePublished = request.getParameter("datePublished");
-            String authorID = request.getParameter("authorID");
-            
-            try{
-            values = new ArrayList<>();
-            values.add(title);
-            values.add(datePublished);
-            values.add(authorID);
-            
-            service.createBook(values);
-            bookRecords = service.getAllBookRecords();
-            request.setAttribute("bookRecordsResult", bookRecords);
-            } catch(SQLException | ClassNotFoundException | ParseException ex) {
-                request.setAttribute("error", ex.toString());
+
+        String action = request.getParameter("action");
+
+        if (action != null) {
+            try {
+                values = new ArrayList<>();
+                switch (action) {
+                    case "save":
+                        values.add(request.getParameter("title"));
+                        values.add(request.getParameter("datePublished"));
+                        values.add(request.getParameter("authorID"));
+                        String bookID = request.getParameter("bookID");
+
+                        if (bookID.matches("\\d+")) {            // Update
+                            values.add(0, bookID);
+                            service.updateBookByID(values);
+                            request.setAttribute("bookRecordsResult", service.getAllBookRecords());
+                        } else { 
+                            service.createBook(values);
+                            request.setAttribute("bookRecordsResult", service.getAllBookRecords());
+                        }
+                        break;
+                    case "delete":
+                        String[] checkValues = request.getParameterValues("boxes");
+                        service.deleteRecords(Arrays.asList(checkValues));
+                        request.setAttribute("bookRecordsResult", service.getAllBookRecords());
+                        break;
+                }
+            } catch (SQLException | ClassNotFoundException | ParseException error) {
+                request.setAttribute("error", error.toString());
             }
         }
-        
-        
 
-        
-                RequestDispatcher view = request.getRequestDispatcher(resultPage);
+        RequestDispatcher view = request.getRequestDispatcher(resultPage);
         view.forward(request, response);
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-
+// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *

@@ -8,61 +8,101 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
+    <% int row = 0;%>
     <c:set var="error" value="${error}" scope="request"/>
-    
+
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title> Book - Author Records </title>
+        <link href="css.css" type="text/css" rel="stylesheet" />
     </head>
     <body>
 
         <div id="pageContainer">
-            
+
             <div id="errorMessage" >
                 <p id="error">${error}</p>
             </div>
-            
-            <div id="authorTable" >
-                <table style="text-align: center;">
 
-                    <thead>
-                    <th>Book ID</th>
-                    <th>Title</th>
-                    <th>Date Published</th>
-                    <th>Author ID</th>
-                    <th>Author First Name</th>
-                    <th>Author Last Name</th>
-                    </thead>
+            <div id="bookTableContainer" >
+                <form id="deleteForm" method="POST" action="bookAuthorControls?action=delete" >
+                    <table id="recordTable" style="text-align: center;">
 
-                    <tbody>
-                        <c:forEach var="record" items="${bookRecordsResult}">
+                        <thead>   
+                        <th>Book ID</th>
+                        <th>Title</th>
+                        <th>Date Published</th>
+                        <th>Author First Name</th>
+                        <th>Author Last Name</th>
+                        <th>Author ID</th> 
+                        <th>Delete</th>
+                        </thead>
+
+                        <tbody>
+                            <c:forEach var="record" items="${bookRecordsResult}">
+                                <tr>
+                                    <td class="selectable"><a>${record.bookID}</a></td>
+                                    <td>${record.title}</td>
+                                    <td>${record.datePublished}</td>
+                                    <td>${record.author.firstName}</td>
+                                    <td>${record.author.lastName}</td>
+                                    <td>${record.author.id}</td>
+                                    <td> <input type="checkbox" name="boxes" class="boxes" value="${record.bookID}" /> </td>
+                                </tr>
+                            </c:forEach>
                             <tr>
-                                <td>${record.bookID}</td>
-                                <td>${record.title}</td>
-                                <td>${record.datePublished}</td>
-                                <td>${record.author.firstName}</td>
-                                <td>${record.author.lastName}</td>
-                                <td>${record.author.id}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><button type="submit" id="deleteButton" name="submit" value="delete">Delete</button></td>
                             </tr>
-                        </c:forEach>
-                    </tbody>
-                </table>
-            </div>
 
-            <div id="add_updateForm">
-                <form id="add_updateForm" method="POST" action="bookAuthorControls"> 
-                    <input type="text" id="title" name="title" placeholder="Title" />
-                    <input type="text" id="datePublished" name="datePublished" placeholder="Date" />
-                    <input type="text" id="authorID" name="authorID" placeholder="Author ID" />
-                    <input type="text" id="authorFirstName" name="authorFirstName" placeholder="First Name" />
-                    <input type="text" id="authorLastName" name="authorLastName" placeholder="Last Name" />
-                    <button type="submit" id="submit" name="submit" value="Submit"/>
+                        </tbody>
+                    </table>
                 </form>
             </div>
 
+                <div id="textInputs">
+                    <form id="add_editForm" method="POST" action="bookAuthorControls?action=save">
+                    <table>
+                        <tr>
+                            <td>Book ID</td>
+                            <td><input type="text" id="bookID" name="bookID" placeholder="Book ID" readonly="true" /></td>
+                        </tr>                        <tr>
+                            <td>Title</td>
+                            <td><input type="text" id="title" name="title" placeholder="Title" /></td>
+                        </tr>                        <tr>
+                            <td>Date Published</td>
+                            <td><input type="text" id="datePublished" name="datePublished" placeholder="Date" /></td>
+                        </tr>                        <tr>
+                            <td>First Name</td>
+                            <td><input type="text" id="authorFirstName" name="authorFirstName" placeholder="First Name" /></td>
+                        </tr>                        <tr>
+                            <td>Last Name</td>
+                            <td><input type="text" id="authorLastName" name="authorLastName" placeholder="Last Name" /></td>
+                        </tr>                        <tr>
+                            <td>Author ID</td>
+                            <td><input type="text" id="authorID" name="authorID" placeholder="Author ID" /></td>
+                        </tr>
+                        <tr>
+                            <td><button type="submit" id="submit" name="submit">Submit</button></td>
+                            <td><button type="button" id="clearButton">Clear</button>
+                        </tr>
+                    </table>
+                    </form>
+                </div>
 
+            </div>
 
-        </div>
-
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+            <script src="js.js" type="text/javascript" ></script>
     </body>
 </html>
+<!-- <button onclick="location.href = 'bookAuthorControls?action=save'" style="float:left;" type="button" id="saveButton" name="submit" value="save">Save</button>
+
+ style="text-align: center;"><button onclick="location.href = 'bookAuthorControls?action=edit'" type="button" id="editButton" name="submit" value="edit">Edit</button>
+
+-->

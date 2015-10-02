@@ -1,0 +1,17 @@
+#textInputs{
+    width:50%;
+    height:25%;
+}
+
+#add_editForm tr{
+    width:45%;
+    height:25%; 
+}
+
+a{
+    color:blue;
+}
+
+#deleteButton{
+    float:right;
+}
