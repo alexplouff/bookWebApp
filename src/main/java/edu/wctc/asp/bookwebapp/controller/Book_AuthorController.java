@@ -9,6 +9,7 @@ import edu.wctc.asp.bookwebapp.bookservice.BookService;
 import edu.wctc.asp.bookwebapp.lowlevel.BookDAO;
 import edu.wctc.asp.bookwebapp.lowlevel.SQL_Accessor;
 import edu.wctc.asp.bookwebapp.lowlevel.SQL_Data_Provider;
+import edu.wctc.asp.bookwebapp.model.Book;
 import edu.wctc.asp.bookwebapp.model.BookStrategy;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -70,7 +71,7 @@ public class Book_AuthorController extends HttpServlet {
             try {
                 values = new ArrayList<>();
                 switch (action) {
-                    case "save":
+                    case "save": //                                 Ecompasses Save and Update
                         values.add(request.getParameter("title"));
                         values.add(request.getParameter("datePublished"));
                         values.add(request.getParameter("authorID"));
@@ -90,6 +91,8 @@ public class Book_AuthorController extends HttpServlet {
                         service.deleteRecords(Arrays.asList(checkValues));
                         request.setAttribute("bookRecordsResult", service.getAllBookRecords());
                         break;
+                    default:
+                        request.setAttribute("error", "Something Went Wrong!");
                 }
             } catch (SQLException | ClassNotFoundException | ParseException error) {
                 request.setAttribute("error", error.toString());

@@ -8,6 +8,10 @@ package edu.wctc.asp.bookwebapp.model;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 /**
@@ -18,21 +22,14 @@ public class Book implements BookStrategy {
 
     private static final String DATE_FORMAT = "yyyy-MM-dd";
     private static final String DIGIT_REG_EX = "\\d+";
+    private static final DateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
 
     private int bookID, authorID;
     private String title;
-    private Date datePublished;
+    private LocalDate datePublished;
     private AuthorStrategy author;
-    
 
     public Book() {
-    }
-    
-    public Book(String title, Date datePublished, int authorID, AuthorStrategy author) throws ParseException {
-        setTitle(title);
-        setDatePublished(datePublished);
-        setAuthorID(authorID);
-        setAuthor(author);
     }
 
     public Book(String title, String datePublished, String authorID) throws ParseException { //Service Create
@@ -40,14 +37,14 @@ public class Book implements BookStrategy {
         setDatePublished(datePublished);
         setAuthorID(authorID);
     }
-    
+
     public Book(String bookID, String title, String datePublished, String authorID) throws ParseException { //Service Update
         setBookID(bookID);
         setTitle(title);
         setDatePublished(datePublished);
         setAuthorID(authorID);
     }
-    
+
     public Book(int bookID, String title, String datePublished, int authorID, Author author) throws ParseException {
         setBookID(bookID);
         setTitle(title);
@@ -111,24 +108,18 @@ public class Book implements BookStrategy {
     }
 
     @Override
-    public Date getDatePublished() {
+    public LocalDate getDatePublished() {
         return datePublished;
     }
 
-    public final void setDatePublished(Date datePublished) throws IllegalArgumentException {
-        if (datePublished != null) {
-            this.datePublished = datePublished;
-        } else {
-            throw new IllegalArgumentException("Date Can't Be Empty");
-        }
-    }
-
     public final void setDatePublished(String datePublished) throws IllegalArgumentException, ParseException {
-        if (datePublished != null) {
-            DateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-            this.datePublished = sdf.parse(datePublished);
-        } else {
+        if (datePublished == null) {
             throw new IllegalArgumentException("Invalid Date/Format");
+        } else {
+            Date sqlDate = SDF.parse(datePublished);
+            Instant instant = sqlDate.toInstant();
+            ZonedDateTime zdt = instant.atZone(ZoneId.systemDefault());
+            this.datePublished = LocalDate.parse(zdt.toLocalDate().toString());
         }
     }
 

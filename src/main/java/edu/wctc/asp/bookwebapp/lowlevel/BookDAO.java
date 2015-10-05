@@ -104,7 +104,7 @@ public class BookDAO implements DAO_Strategy {
         
         List values = new ArrayList();
         values.add(book.getTitle());
-        values.add(book.getDatePublished());
+        values.add(book.getDatePublished());  // <---------------- This needs to be of type DATE!!!!
         values.add(book.getAuthorID());
         BOOK_COLUMNS.remove(BOOK_PRIMARY_KEY);
         accessor.createRecord(DATABASE.concat(".".concat(BOOK_TABLE)), BOOK_COLUMNS, values);

@@ -1,17 +1,38 @@
+*{
+    font-family: sans-serif;
+}
+
 #textInputs{
     width:50%;
     height:25%;
 }
 
-#add_editForm tr{
+#pageContainer{
+    width:100vw;
+    height: auto;
+}
+
+#bookTableContainer{
+    width:90vw;
+    height:auto;
+    margin-left:10%;
+}
+
+table tr{
     width:45%;
     height:25%; 
+}
+
+table tr:nth-child(even){
+    background-color: #D8E5FF;
 }
 
 a{
     color:blue;
 }
 
-#deleteButton{
-    float:right;
+body{
+    background-color: #F9F9F9;
 }
+
+
