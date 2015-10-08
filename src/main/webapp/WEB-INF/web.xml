@@ -35,6 +35,21 @@
         <param-value>root</param-value>
     </context-param>
     
+    <context-param>
+        <param-name>dbStrategy</param-name>
+        <param-value>edu.wctc.asp.bookwebapp.lowlevel.SQL_Accessor</param-value>
+    </context-param>
+    
+    <context-param>
+        <param-name>daoClass</param-name>
+        <param-value>edu.wctc.asp.bookwebapp.lowlevel.BookDAO</param-value>
+    </context-param>
+    
+    <context-param>
+        <param-name>mySQL_DataClass</param-name>
+        <param-value>edu.wctc.asp.bookwebapp.lowlevel.SQL_Data_Provider</param-value>
+    </context-param>
+    
     <session-config>
         <session-timeout>
             30

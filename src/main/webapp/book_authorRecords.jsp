@@ -4,12 +4,12 @@
     Author     : alex
 --%>
 
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <c:set var="error" value="${error}" scope="request"/>
-
+    
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title> Book - Author Records </title>
@@ -19,6 +19,13 @@
 
         <div id="pageContainer">
 
+            <div id="login" >
+                <c:if test="${not empty user}">
+                    <p>Logged In As: ${user}</p>
+                    <a href="bookAuthorControls?loginAction=logout">Log Out</a>
+                </c:if>
+            </div>
+            
             <div id="errorMessage" >
                 <p id="error">${error}</p>
             </div>
@@ -45,7 +52,7 @@
                                     <td>${record.datePublished}</td>
                                     <td>${record.author.firstName}</td>
                                     <td>${record.author.lastName}</td>
-                                    <td>${record.author.id}</td>
+                                    <td>${record.authorID}</td>
                                     <td> <input type="checkbox" name="boxes" class="boxes" value="${record.bookID}" /> </td>
                                 </tr>
                             </c:forEach>

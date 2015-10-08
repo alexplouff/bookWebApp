@@ -6,6 +6,7 @@
 package edu.wctc.asp.bookwebapp.model;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 /**
  *
@@ -23,4 +24,5 @@ public interface BookStrategy {
 
     public abstract String getTitle();
     
+    public abstract Date getSavingDatePublished();
 }

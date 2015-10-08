@@ -8,10 +8,12 @@ package edu.wctc.asp.bookwebapp.lowlevel;
 import edu.wctc.asp.bookwebapp.model.Author;
 import edu.wctc.asp.bookwebapp.model.AuthorStrategy;
 import edu.wctc.asp.bookwebapp.model.Book;
+import edu.wctc.asp.bookwebapp.model.BookAuthorDTO;
 import edu.wctc.asp.bookwebapp.model.BookStrategy;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -67,19 +69,19 @@ public class BookDAO implements DAO_Strategy {
     }
     
     @Override
-    public List getAllRecords() throws SQLException, ParseException, ClassNotFoundException{
+    public List<BookAuthorDTO> getAllRecords() throws SQLException, ParseException, ClassNotFoundException{
         List<Map<String,Object>> rawRecord =
                 accessor.getJoinedRecords(DATABASE,BOOK_TABLE, BOOK_PRIMARY_KEY,
                                             AUTHOR_TABLE, AUTHOR_PRIMARY_KEY);   // "Author.AuthorID
         rawRecord.remove(3);
-        List<BookStrategy> bookList = new ArrayList<>(); 
+        List<BookAuthorDTO> bookList = new ArrayList<>(); 
         for(Map<String,Object> values : rawRecord){
             Object o = values.get(BOOK_PRIMARY_KEY);
             int bookID = (o == null) ? 00 : Integer.valueOf(o.toString());
             o = values.get(BOOK_TITLE_COLUMN);
             String title = (o == null) ? NULL_REPLACEMENT_VALUE : o.toString();
             o = values.get(DATE_PUBLISHED_COLUMN);
-            String date = (o == null) ? NULL_REPLACEMENT_VALUE : o.toString();
+            Date date = (o == null) ? null : (Date)o;
             o = values.get(AUTHOR_PRIMARY_KEY);
             int authorID = (o == null) ? 00 : Integer.valueOf(o.toString());
             o = values.get(AUTHOR_FIRST_NAME_COLUMN);
@@ -87,7 +89,7 @@ public class BookDAO implements DAO_Strategy {
             o = values.get(AUTHOR_LAST_NAME_COLUMN);
             String lastName = (o == null) ? NULL_REPLACEMENT_VALUE : o.toString();
             
-            BookStrategy book = new Book(bookID, title, date, authorID, new Author(authorID, firstName, lastName));
+            BookAuthorDTO book = new BookAuthorDTO(bookID, title, date, authorID, firstName, lastName);
             bookList.add(book);
         }
         
@@ -104,7 +106,7 @@ public class BookDAO implements DAO_Strategy {
         
         List values = new ArrayList();
         values.add(book.getTitle());
-        values.add(book.getDatePublished());  // <---------------- This needs to be of type DATE!!!!
+        values.add(book.getSavingDatePublished());  // <---------------- This needs to be of type DATE!!!!
         values.add(book.getAuthorID());
         BOOK_COLUMNS.remove(BOOK_PRIMARY_KEY);
         accessor.createRecord(DATABASE.concat(".".concat(BOOK_TABLE)), BOOK_COLUMNS, values);
@@ -127,7 +129,7 @@ public class BookDAO implements DAO_Strategy {
         List values = new ArrayList();
         values.add(book.getBookID());
         values.add(book.getTitle());
-        values.add(book.getDatePublished());
+        values.add(book.getSavingDatePublished());
         values.add(book.getAuthorID());
         
         accessor.updateRecord(DATABASE.concat(".".concat(BOOK_TABLE)), BOOK_COLUMNS, values, BOOK_PRIMARY_KEY, book.getBookID());

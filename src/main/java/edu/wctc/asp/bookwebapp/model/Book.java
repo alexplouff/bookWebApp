@@ -27,25 +27,41 @@ public class Book implements BookStrategy {
     private int bookID, authorID;
     private String title;
     private LocalDate datePublished;
+    private Date savingDate;
     private AuthorStrategy author;
 
     public Book() {
     }
+    
+    public Book(int id, String title, Date datePublished, int authorID) throws ParseException { //Service Create
+        setBookID(id);
+        setTitle(title);
+        setDatePublished(datePublished);
+        setAuthorID(authorID);
+    }
 
     public Book(String title, String datePublished, String authorID) throws ParseException { //Service Create
         setTitle(title);
-        setDatePublished(datePublished);
+        setSavingDatePublished(datePublished);
         setAuthorID(authorID);
     }
 
     public Book(String bookID, String title, String datePublished, String authorID) throws ParseException { //Service Update
         setBookID(bookID);
         setTitle(title);
-        setDatePublished(datePublished);
+        setSavingDatePublished(datePublished);
         setAuthorID(authorID);
     }
 
     public Book(int bookID, String title, String datePublished, int authorID, Author author) throws ParseException {
+        setBookID(bookID);
+        setTitle(title);
+        setDatePublished(datePublished);
+        setAuthorID(authorID);
+        setAuthor(author);
+    }
+    
+    public Book(int bookID, String title, Date datePublished, int authorID, Author author) throws ParseException {
         setBookID(bookID);
         setTitle(title);
         setDatePublished(datePublished);
@@ -111,6 +127,20 @@ public class Book implements BookStrategy {
     public LocalDate getDatePublished() {
         return datePublished;
     }
+    
+    public final void setSavingDatePublished(String datePublished) throws IllegalArgumentException, ParseException {
+        if (datePublished == null) {
+            throw new IllegalArgumentException("Invalid Date/Format");
+        } else {
+            Date sqlDate = SDF.parse(datePublished);
+            this.savingDate = sqlDate;
+        }
+    }
+    
+    @Override
+    public Date getSavingDatePublished(){
+        return savingDate;
+    }
 
     public final void setDatePublished(String datePublished) throws IllegalArgumentException, ParseException {
         if (datePublished == null) {
@@ -118,6 +148,16 @@ public class Book implements BookStrategy {
         } else {
             Date sqlDate = SDF.parse(datePublished);
             Instant instant = sqlDate.toInstant();
+            ZonedDateTime zdt = instant.atZone(ZoneId.systemDefault());
+            this.datePublished = LocalDate.parse(zdt.toLocalDate().toString());
+        }
+    }
+    
+    public final void setDatePublished(Date datePublished) throws IllegalArgumentException, ParseException{
+        if(datePublished == null){
+            throw new IllegalArgumentException("Ivalid Date/Format");
+        } else {
+            Instant instant = SDF.parse(datePublished.toString()).toInstant();
             ZonedDateTime zdt = instant.atZone(ZoneId.systemDefault());
             this.datePublished = LocalDate.parse(zdt.toLocalDate().toString());
         }
