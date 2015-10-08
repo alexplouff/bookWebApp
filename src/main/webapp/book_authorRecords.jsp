@@ -21,8 +21,8 @@
 
             <div id="login" >
                 <c:if test="${not empty user}">
-                    <p>Logged In As: ${user}</p>
-                    <a href="bookAuthorControls?loginAction=logout">Log Out</a>
+                    <p>Logged In As: (${user})
+                    <a href="bookAuthorControls?loginAction=logout">Log Out</a></p>
                 </c:if>
             </div>
             

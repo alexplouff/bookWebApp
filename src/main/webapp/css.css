@@ -2,6 +2,11 @@
     font-family: sans-serif;
 }
 
+#login p{
+    font-family: serif;
+    font-size: small;
+}
+
 #textInputs{
     width:50%;
     height:25%;

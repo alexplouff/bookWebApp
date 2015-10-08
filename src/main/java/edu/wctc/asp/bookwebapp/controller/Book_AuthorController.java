@@ -61,11 +61,12 @@ public class Book_AuthorController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        BookService service = new BookService(new BookDAO(new SQL_Accessor(
-                new SQL_Data_Provider(driverClass, dbURL, dbUserName, password))));
+//        BookService service = new BookService(new BookDAO(new SQL_Accessor(
+//                new SQL_Data_Provider(driverClass, dbURL, dbUserName, password))));
         try {
-    //        BookService service = injectWithDependancies();
-
+            DAO_Strategy dao = injectWithDependancies();
+            
+            BookService service = new BookService(dao);
             String loginAction = request.getParameter("loginAction");
             if (loginAction != null) {
                 HttpSession session;
@@ -79,18 +80,18 @@ public class Book_AuthorController extends HttpServlet {
                         session = request.getSession(false);
                         if (session != null) {
                             session.invalidate();
-                            //response.sendRedirect("errorPage.jsp");
+                            response.sendRedirect("index.html");
+                            return;
                         }
                         break;
                     default:
                 }
             } 
 
-            List<String> values;
-
             String action = request.getParameter("action");
 
             if (action != null) {
+                List<String> values;
                 try {
                     values = new ArrayList<>();
                     switch (action) {
@@ -137,7 +138,7 @@ public class Book_AuthorController extends HttpServlet {
     }
 
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    public BookService injectWithDependancies() throws Exception, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException {
+    public DAO_Strategy injectWithDependancies() throws Exception, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException {
 
         SQL_Data_Provider dbDataProvider = null;
         Class dbClassData = Class.forName(sqlDataClass);
@@ -177,19 +178,20 @@ public class Book_AuthorController extends HttpServlet {
 
         if (dbAccessConstructor != null) {
             Object[] accessorConArgs = new Object[]{
-                sqlDataConstructor
+                dbDataProvider
             };
             dbAccessor = (SQL_Accessor) dbAccessConstructor.newInstance(accessorConArgs);
         }
 
         if (daoConstructor != null) {
             Object[] daoConArgs = new Object[]{
-                dbAccessConstructor
+                dbAccessor
             };
             dao = (DAO_Strategy) daoConstructor.newInstance(daoConArgs);
         }
 
-        return (BookService) dao;
+        return (DAO_Strategy) dao;
+        
     }
 
     @Override
