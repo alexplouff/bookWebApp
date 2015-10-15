@@ -6,7 +6,6 @@
 package edu.wctc.asp.bookwebapp.controller;
 
 import edu.wctc.asp.bookwebapp.bookservice.BookService;
-import edu.wctc.asp.bookwebapp.lowlevel.BookDAO;
 import edu.wctc.asp.bookwebapp.lowlevel.DAO_Strategy;
 import edu.wctc.asp.bookwebapp.lowlevel.DatabaseAccessorStrategy;
 import edu.wctc.asp.bookwebapp.lowlevel.SQL_Accessor;
@@ -143,10 +142,10 @@ public class Book_AuthorController extends HttpServlet {
         SQL_Data_Provider dbDataProvider = null;
         Class dbClassData = Class.forName(sqlDataClass);
 
-        DatabaseAccessorStrategy dbAccessor = null;
+        DatabaseAccessorStrategy dbAccessorProvider = null;
         Class dbClass = Class.forName(dbStrategyClassName);
 
-        DAO_Strategy dao = null;
+        DAO_Strategy daoProvider = null;
         Class daoClass = Class.forName(daoClassName);
 
         Constructor sqlDataConstructor = null;
@@ -180,17 +179,17 @@ public class Book_AuthorController extends HttpServlet {
             Object[] accessorConArgs = new Object[]{
                 dbDataProvider
             };
-            dbAccessor = (SQL_Accessor) dbAccessConstructor.newInstance(accessorConArgs);
+            dbAccessorProvider = (SQL_Accessor) dbAccessConstructor.newInstance(accessorConArgs);
         }
 
         if (daoConstructor != null) {
             Object[] daoConArgs = new Object[]{
-                dbAccessor
+                dbAccessorProvider
             };
-            dao = (DAO_Strategy) daoConstructor.newInstance(daoConArgs);
+            daoProvider = (DAO_Strategy) daoConstructor.newInstance(daoConArgs);
         }
 
-        return (DAO_Strategy) dao;
+        return (DAO_Strategy)daoProvider;
         
     }
 
