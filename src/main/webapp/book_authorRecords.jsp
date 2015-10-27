@@ -21,7 +21,7 @@
 
             <div id="login" >
                 <c:if test="${not empty user}">
-                    <p>Logged In As: (${user})
+                    <p id="user">Logged In As: (${user})
                     <a href="bookAuthorControls?loginAction=logout">Log Out</a></p>
                 </c:if>
             </div>
@@ -50,9 +50,9 @@
                                     <td class="selectable"><a>${record.bookID}</a></td>
                                     <td>${record.title}</td>
                                     <td>${record.datePublished}</td>
-                                    <td>${record.author.firstName}</td>
-                                    <td>${record.author.lastName}</td>
-                                    <td>${record.authorID}</td>
+                                    <td>${record.authorID.authorFirstName}</td>
+                                    <td>${record.authorID.authorLastName}</td>
+                                    <td>${record.authorID.authorID}</td>
                                     <td> <input type="checkbox" name="boxes" class="boxes" value="${record.bookID}" /> </td>
                                 </tr>
                             </c:forEach>

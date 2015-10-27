@@ -5,21 +5,18 @@
  */
 package edu.wctc.asp.bookwebapp.controller;
 
-import edu.wctc.asp.bookwebapp.bookservice.BookService;
-import edu.wctc.asp.bookwebapp.lowlevel.DAO_Strategy;
-import edu.wctc.asp.bookwebapp.lowlevel.DatabaseAccessorStrategy;
-import edu.wctc.asp.bookwebapp.lowlevel.SQL_Accessor;
-import edu.wctc.asp.bookwebapp.lowlevel.SQL_Data_Provider;
+import edu.wctc.asp.bookwebapp.entity.Author;
+import edu.wctc.asp.bookwebapp.entity.Book;
+
+import edu.wctc.asp.bookwebapp.service.AbstractFacade;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.sql.SQLException;
-import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
+import javax.inject.Inject;
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -34,19 +31,15 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "Book_AuthorController", urlPatterns = {"/bookAuthorControls"})
 public class Book_AuthorController extends HttpServlet {
 
-    private String resultPage;
-    private ServletContext ctx;
-    private String driverClass;
-    private String dbURL;
-    private String dbUserName;
-    private String password;
-    private String dbStrategyClassName;
-    private String daoClassName;
-    private String sqlDataClass;
-    
     private final static String ERROR_PAGE = "errorPage.jsp";
     private final static String LOGIN_ERROR_MESSAGE = "Was Not Able To Log You In";
-            
+    private String resultPage;
+
+    @Inject
+    private AbstractFacade<Author> authorService;
+
+    @Inject
+    private AbstractFacade<Book> bookService;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -63,9 +56,8 @@ public class Book_AuthorController extends HttpServlet {
 //        BookService service = new BookService(new BookDAO(new SQL_Accessor(
 //                new SQL_Data_Provider(driverClass, dbURL, dbUserName, password))));
         try {
-            DAO_Strategy dao = injectWithDependancies();
             
-            BookService service = new BookService(dao);
+
             String loginAction = request.getParameter("loginAction");
             if (loginAction != null) {
                 HttpSession session;
@@ -85,7 +77,7 @@ public class Book_AuthorController extends HttpServlet {
                         break;
                     default:
                 }
-            } 
+            }
 
             String action = request.getParameter("action");
 
@@ -93,43 +85,79 @@ public class Book_AuthorController extends HttpServlet {
                 List<String> values;
                 try {
                     values = new ArrayList<>();
+                    
                     switch (action) {
+                        
                         case "save": //                                 Ecompasses Save and Update
-                            values.add(request.getParameter("title"));
-                            values.add(request.getParameter("datePublished"));
-                            values.add(request.getParameter("authorID"));
+                            Book book = null;
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                            Date date;
+
+                            String bookAuthorID = request.getParameter("authorID");
                             String bookID = request.getParameter("bookID");
+                            String title = request.getParameter("title");
+                            String userEnteredDate = request.getParameter("datePublished");
+                            Author author = null;
 
                             if (bookID.matches("\\d+")) {            // Update
-                                values.add(0, bookID);
-                                service.updateBookByID(values);
-                                request.setAttribute("bookRecordsResult", service.getAllBookRecords());
-                            } else {
-                                service.createBook(values);
-                                request.setAttribute("bookRecordsResult", service.getAllBookRecords());
+
+                                book = bookService.find(new Integer(bookID));
+                                book.setTitle(title);
+                                book.setDatePublished(sdf.parse(userEnteredDate));
+                                
+                                author = authorService.find(new Integer(bookAuthorID));
+                                author.setAuthorFirstName(request.getParameter("authorFirstName"));
+                                author.setAuthorLastName(request.getParameter("authorLastName"));
+                                book.setAuthorID(author);
+                                
+                                bookService.edit(book);
+                                
+                                
+                            } else {    
+                                author = new Author();
+                                author.setAuthorFirstName(request.getParameter("authorFirstName"));
+                                author.setAuthorLastName(request.getParameter("authorLastName"));
+                                authorService.create(author);
+//                                List<Author> authorList = (List<Author>)authorService.findAll();
+//                                author = authorList.get(authorList.size()-1);
+                                
+                                Collection<Book> list = new ArrayList<>();
+                                book = new Book(0);
+                                book.setTitle(title);
+                                book.setDatePublished(sdf.parse(userEnteredDate));
+                                book.setAuthorID(author);
+                                list.add(book);
+                                author.setBookCollection(list);
+                                //authorService.flush();
+                                authorService.edit(author);
                             }
                             break;
                         case "delete":
                             String[] checkValues = request.getParameterValues("boxes");
-                            service.deleteRecords(Arrays.asList(checkValues));
-                            request.setAttribute("bookRecordsResult", service.getAllBookRecords());
+                            for (String id : checkValues) {
+                                book = bookService.find(new Integer(id));
+                                bookService.remove(book);
+                            }
                             break;
                         default:
                             request.setAttribute("error", "Something Went Wrong!");
                     }
-                } catch (SQLException | ClassNotFoundException | ParseException error) {
+                } catch (Exception error) {
                     request.setAttribute("error", error.toString());
                 }
             }
 
             try {
-                request.setAttribute("bookRecordsResult", service.getAllBookRecords());
+                request.setAttribute("bookRecordsResult", bookService.findAll());
                 resultPage = "book_authorRecords.jsp";
-            } catch (SQLException | ClassNotFoundException | ParseException ex) {
-                request.setAttribute("bookRecordsResult", ex.toString());
+
+            } catch (Exception e) {
+                System.out.println(e.getLocalizedMessage());
+                request.setAttribute("bookRecordsResult", e.toString());
             }
+
         } catch (Exception e) {
-            System.out.println("Did Not Work");
+            request.setAttribute("error", "Did Not Work");
         }
 
         RequestDispatcher view = request.getRequestDispatcher(resultPage);
@@ -137,74 +165,6 @@ public class Book_AuthorController extends HttpServlet {
     }
 
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    public DAO_Strategy injectWithDependancies() throws Exception, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException {
-
-        SQL_Data_Provider dbDataProvider = null;
-        Class dbClassData = Class.forName(sqlDataClass);
-
-        DatabaseAccessorStrategy dbAccessorProvider = null;
-        Class dbClass = Class.forName(dbStrategyClassName);
-
-        DAO_Strategy daoProvider = null;
-        Class daoClass = Class.forName(daoClassName);
-
-        Constructor sqlDataConstructor = null;
-        Constructor dbAccessConstructor = null;
-        Constructor daoConstructor = null;
-
-        try {
-            sqlDataConstructor = dbClassData.getConstructor(new Class[]{
-                String.class, String.class, String.class, String.class
-            });
-
-            dbAccessConstructor = dbClass.getConstructor(new Class[]{
-                SQL_Data_Provider.class
-            });
-
-            daoConstructor = daoClass.getConstructor(new Class[]{
-                DatabaseAccessorStrategy.class
-            });
-        } catch (NoSuchMethodException ex) {
-            System.out.println(ex.toString());
-        }
-
-        if (sqlDataConstructor != null) {
-            Object[] constructorArgs = new Object[]{
-                driverClass, dbURL, dbUserName, password
-            };
-            dbDataProvider = (SQL_Data_Provider) sqlDataConstructor.newInstance(constructorArgs);
-        }
-
-        if (dbAccessConstructor != null) {
-            Object[] accessorConArgs = new Object[]{
-                dbDataProvider
-            };
-            dbAccessorProvider = (SQL_Accessor) dbAccessConstructor.newInstance(accessorConArgs);
-        }
-
-        if (daoConstructor != null) {
-            Object[] daoConArgs = new Object[]{
-                dbAccessorProvider
-            };
-            daoProvider = (DAO_Strategy) daoConstructor.newInstance(daoConArgs);
-        }
-
-        return (DAO_Strategy)daoProvider;
-        
-    }
-
-    @Override
-    public void init() throws ServletException {
-        ctx = getServletContext();
-        driverClass = (String) ctx.getInitParameter("db.driverName");
-        dbURL = (String) ctx.getInitParameter("db.driver.url");
-        dbUserName = (String) ctx.getInitParameter("db.userName");
-        password = (String) ctx.getInitParameter("db.password");
-        dbStrategyClassName = (String) ctx.getInitParameter("dbStrategy");
-        sqlDataClass = (String) ctx.getInitParameter("mySQL_DataClass");
-        daoClassName = (String) ctx.getInitParameter("daoClass");
-    }
-
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -244,3 +204,15 @@ public class Book_AuthorController extends HttpServlet {
     }// </editor-fold>
 
 }
+
+
+/*
+    public List<Author> findByName(String name){
+     import Query
+        String jpql = "Select A from Author Where A.authorName = ?1";
+        Query query = getEntityManager().createQuery(String jqplString);
+        query.setParameter(1, name);
+        return query.getResultList();
+
+    }
+*/
