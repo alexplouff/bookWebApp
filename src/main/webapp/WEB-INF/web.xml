@@ -5,16 +5,38 @@
 	 xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
 	 version="3.1">
     
-    <servlet> 
-        <servlet-name>Book_AuthorController</servlet-name>
-        <servlet-class>edu.wctc.asp.bookwebapp.controller.Book_AuthorController </servlet-class>
-    </servlet>
+    <!-- Begin Spring-specific configuration -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:applicationContext.xml</param-value>
+    </context-param>
+        
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+    </listener>
+    <!-- END Spring configuration -->
     
+    <servlet>
+        <!-- first alias, private to config -->
+        <servlet-name>AuthorController</servlet-name>
+        <servlet-class>edu.wctc.asp.bookwebapp.Book_AuthorController</servlet-class>
+        <!-- must be last item in servlet config -->
+        <load-on-startup>1</load-on-startup>
+    </servlet>
     <servlet-mapping>
-        <servlet-name>Book_AuthorController</servlet-name>
-        <url-pattern>/bookAuthorControls</url-pattern>
+        <!-- reference private config alias -->
+        <servlet-name>AuthorController</servlet-name>
+        <!-- second alias is the one you use in your links -->
+        <url-pattern>/AuthorControls</url-pattern>
     </servlet-mapping>
-   
+    <servlet-mapping>
+        <servlet-name>BookController</servlet-name>
+        <url-pattern>/BookController</url-pattern>
+    </servlet-mapping>
+
     <session-config>
         <session-timeout>
             30
