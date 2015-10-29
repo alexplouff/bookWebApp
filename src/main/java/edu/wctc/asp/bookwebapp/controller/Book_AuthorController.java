@@ -114,22 +114,22 @@ public class Book_AuthorController extends HttpServlet {
                                 
                                 
                             } else {    
-                                author = new Author();
+                                author = new Author(0);
+                                book = new Book(0);
+                                Collection<Book> list = new ArrayList<>();
+                                
                                 author.setAuthorFirstName(request.getParameter("authorFirstName"));
                                 author.setAuthorLastName(request.getParameter("authorLastName"));
                                 authorService.create(author);
-//                                List<Author> authorList = (List<Author>)authorService.findAll();
-//                                author = authorList.get(authorList.size()-1);
-                                
-                                Collection<Book> list = new ArrayList<>();
-                                book = new Book(0);
+                                authorService.flush();
                                 book.setTitle(title);
                                 book.setDatePublished(sdf.parse(userEnteredDate));
                                 book.setAuthorID(author);
                                 list.add(book);
                                 author.setBookCollection(list);
-                                //authorService.flush();
                                 authorService.edit(author);
+                                
+                                
                             }
                             break;
                         case "delete":
