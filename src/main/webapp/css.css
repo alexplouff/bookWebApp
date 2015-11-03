@@ -1,43 +1,6 @@
-*{
-    font-family: sans-serif;
+
+
+#tableData th{
+    padding-left: 5%;
+    padding-right: 5%;
 }
-
-#login p{
-    font-family: serif;
-    font-size: small;
-}
-
-#textInputs{
-    width:50%;
-    height:25%;
-}
-
-#pageContainer{
-    width:100vw;
-    height: auto;
-}
-
-#bookTableContainer{
-    width:90vw;
-    height:auto;
-    margin-left:10%;
-}
-
-table tr{
-    width:45%;
-    height:25%; 
-}
-
-table tr:nth-child(even){
-    background-color: #D8E5FF;
-}
-
-a{
-    color:blue;
-}
-
-body{
-    background-color: #F9F9F9;
-}
-
-
