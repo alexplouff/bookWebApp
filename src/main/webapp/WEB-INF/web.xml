@@ -14,42 +14,7 @@
         <servlet-name>Book_AuthorController</servlet-name>
         <url-pattern>/bookAuthorControls</url-pattern>
     </servlet-mapping>
-    
-    <context-param>
-        <param-name>db.driverName</param-name>
-        <param-value>com.mysql.jdbc.Driver</param-value>
-    </context-param>
-    
-    <context-param>
-        <param-name>db.driver.url</param-name>
-        <param-value>jdbc:mysql://localhost:3306/Client?zeroDateTimeBehavior=convertToNull</param-value>
-    </context-param>
-    
-    <context-param>
-        <param-name>db.userName</param-name>
-        <param-value>root</param-value>
-    </context-param>
-    
-    <context-param>
-        <param-name>db.password</param-name>
-        <param-value>root</param-value>
-    </context-param>
-    
-    <context-param>
-        <param-name>dbStrategy</param-name>
-        <param-value>edu.wctc.asp.bookwebapp.lowlevel.SQL_Accessor</param-value>
-    </context-param>
-    
-    <context-param>
-        <param-name>daoClass</param-name>
-        <param-value>edu.wctc.asp.bookwebapp.lowlevel.BookDAO</param-value>
-    </context-param>
-    
-    <context-param>
-        <param-name>mySQL_DataClass</param-name>
-        <param-value>edu.wctc.asp.bookwebapp.lowlevel.SQL_Data_Provider</param-value>
-    </context-param>
-    
+   
     <session-config>
         <session-timeout>
             30
