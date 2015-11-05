@@ -5,6 +5,7 @@
  */
 package edu.wctc.asp.bookwebapp.controller;
 
+import edu.wctc.asp.bookwebapp.entity.Book;
 import edu.wctc.asp.bookwebapp.service.BookService;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
@@ -37,21 +38,44 @@ public class BookController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
 
-                ServletContext sctx = getServletContext();
+        ServletContext sctx = getServletContext();
         WebApplicationContext ctx
                 = WebApplicationContextUtils.getWebApplicationContext(sctx);
         BookService bookService = (BookService) ctx.getBean("bookService");
-        
-        try{
+
+        String action = request.getParameter("action");
+
+        if (action != null) {
+
+            try {
+
+                String bookID = request.getParameter("bookID");
+                String title = request.getParameter("title");
+                String datePublished = request.getParameter("datePublished");
+                switch (action) {
+
+                    case "save":
+
+                        Book book = new Book(0);
+
+                }
+
+            } catch (Exception e) {
+
+            }
+
+        }
+
+        try {
             request.setAttribute("bookList", bookService.findAllBooks());
-        } catch (Exception e){
+        } catch (Exception e) {
             request.setAttribute("error", e.toString());
         }
-        
-                RequestDispatcher dispatcher
+
+        RequestDispatcher dispatcher
                 = getServletContext().getRequestDispatcher("/allBooksView.jsp");
         dispatcher.forward(request, response);
-        
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

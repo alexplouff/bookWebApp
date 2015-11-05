@@ -36,6 +36,7 @@
                                 <td>${book.authorID.authorLastName}</td>
                                 <td>${book.authorID.authorID}</td>
                                 <td><input type="checkbox" value="${book.bookID}" name="boxes"/></td>
+                                <td>Edit</td>
                             </tr>
 
                         </c:forEach>

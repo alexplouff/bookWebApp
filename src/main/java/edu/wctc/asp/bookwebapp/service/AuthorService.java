@@ -10,12 +10,17 @@ import edu.wctc.asp.bookwebapp.repository.AuthorRepository;
 import edu.wctc.asp.bookwebapp.repository.BookRepository;
 import java.util.List;
 import javax.inject.Inject;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author alex
  */
+
+@Repository("authorService")
+@Transactional(readOnly = true)
 public class AuthorService {
     
     @Inject
@@ -34,6 +39,16 @@ public class AuthorService {
     
     public Author getAuthorByID(String ID){
         return authorRepo.findOne(Integer.valueOf(ID));
+    }
+    
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    public void deleteAuthors(Integer authorID){
+        authorRepo.delete(authorID);
+    }
+    
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    public void saveAuthor(Author author){
+        authorRepo.saveAndFlush(author);
     }
     
     

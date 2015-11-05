@@ -9,8 +9,9 @@ import edu.wctc.asp.bookwebapp.entity.Book;
 import edu.wctc.asp.bookwebapp.repository.AuthorRepository;
 import edu.wctc.asp.bookwebapp.repository.BookRepository;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.inject.Inject;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -21,10 +22,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class BookService {
     
-    @Autowired
+    @Inject
     private AuthorRepository authorRepo;
     
-    @Autowired
+    @Inject
     private BookRepository bookRepo;
     
     public BookService(){
@@ -33,5 +34,10 @@ public class BookService {
     
     public List<Book> findAllBooks(){
         return bookRepo.findAll();
+    }
+    
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    public void saveBook(Book book){
+        bookRepo.save(book);
     }
 }
