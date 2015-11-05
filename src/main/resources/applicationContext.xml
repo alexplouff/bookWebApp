@@ -26,12 +26,12 @@
 ">
     <!-- edu.wctc.asp.bookwebapp. -->
     <!-- Scans within the base package of the application for Spring annotations to configure as beans -->
-    <context:component-scan base-package="edu.wctc.asp.bookwebapp.">
+    <context:component-scan base-package="edu.wctc.asp.bookwebapp">
         <context:exclude-filter type="regex" expression="edu\.wctc\.asp\.bookwebapp\.repository.*" />
     </context:component-scan>
     <context:annotation-config/>
     
-    <jpa:repositories base-package="edu.wctc.web.demo.bookwebapp.repository" /> <!-- Question  -->
+    <jpa:repositories base-package="edu.wctc.asp.bookwebapp.repository" /> <!-- Question  -->
      
     <!-- Server managed connection pool accessed via JNDI -->
     <jee:jndi-lookup id="dataSource" jndi-name="jdbc/book"/>

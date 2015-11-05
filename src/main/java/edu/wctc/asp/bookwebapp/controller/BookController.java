@@ -7,6 +7,7 @@ package edu.wctc.asp.bookwebapp.controller;
 
 import edu.wctc.asp.bookwebapp.service.BookService;
 import java.io.IOException;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -41,7 +42,15 @@ public class BookController extends HttpServlet {
                 = WebApplicationContextUtils.getWebApplicationContext(sctx);
         BookService bookService = (BookService) ctx.getBean("bookService");
         
+        try{
+            request.setAttribute("bookList", bookService.findAllBooks());
+        } catch (Exception e){
+            request.setAttribute("error", e.toString());
+        }
         
+                RequestDispatcher dispatcher
+                = getServletContext().getRequestDispatcher("/allBooksView.jsp");
+        dispatcher.forward(request, response);
         
     }
 

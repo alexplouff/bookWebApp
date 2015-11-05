@@ -9,6 +9,7 @@ import edu.wctc.asp.bookwebapp.entity.Author;
 import edu.wctc.asp.bookwebapp.repository.AuthorRepository;
 import edu.wctc.asp.bookwebapp.repository.BookRepository;
 import java.util.List;
+import javax.inject.Inject;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -17,10 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class AuthorService {
     
-    @Autowired
+    @Inject
     private AuthorRepository authorRepo;
     
-    @Autowired
+    @Inject
     private BookRepository bookRepo;
     
     AuthorService(){

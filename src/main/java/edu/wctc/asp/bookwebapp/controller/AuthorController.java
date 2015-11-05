@@ -20,7 +20,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  *
  * @author alex
  */
-@WebServlet(name = "AuthorServlet", urlPatterns = {"/AuthorController"})
+@WebServlet(name = "AuthorController", urlPatterns = {"/AuthorController"})
 public class AuthorController extends HttpServlet {
 
     /**
