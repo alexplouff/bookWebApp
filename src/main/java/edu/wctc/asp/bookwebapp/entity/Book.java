@@ -39,7 +39,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Book.findByDatePublished", query = "SELECT b FROM Book b WHERE b.datePublished = :datePublished")})
 public class Book implements Serializable {
     private static final long serialVersionUID = 1L;
-    @Id
+    @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "BookID")
