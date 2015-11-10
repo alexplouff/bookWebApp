@@ -6,6 +6,8 @@
 package edu.wctc.asp.bookwebapp.entity;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -53,7 +55,7 @@ public class Book implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date datePublished;
     @JoinColumn(name = "AuthorID", referencedColumnName = "AuthorID")
-    @ManyToOne(cascade = {CascadeType.ALL, CascadeType.PERSIST})
+    @ManyToOne(cascade = CascadeType.MERGE)
     private Author authorID;
 
     public Book() {
@@ -90,6 +92,11 @@ public class Book implements Serializable {
 
     public void setDatePublished(Date datePublished) {
         this.datePublished = datePublished;
+    }
+    
+    public void setDatePublished(String datePublished)throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        this.datePublished = sdf.parse(datePublished);
     }
 
     public Author getAuthorID() {

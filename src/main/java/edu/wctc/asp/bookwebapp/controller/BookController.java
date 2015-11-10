@@ -5,7 +5,9 @@
  */
 package edu.wctc.asp.bookwebapp.controller;
 
+import edu.wctc.asp.bookwebapp.entity.Author;
 import edu.wctc.asp.bookwebapp.entity.Book;
+import edu.wctc.asp.bookwebapp.service.AuthorService;
 import edu.wctc.asp.bookwebapp.service.BookService;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
@@ -25,6 +27,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 @WebServlet(name = "BookController", urlPatterns = {"/BookController"})
 public class BookController extends HttpServlet {
 
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -42,7 +45,7 @@ public class BookController extends HttpServlet {
         WebApplicationContext ctx
                 = WebApplicationContextUtils.getWebApplicationContext(sctx);
         BookService bookService = (BookService) ctx.getBean("bookService");
-
+        AuthorService authorService = (AuthorService) ctx.getBean("authorService");
         String action = request.getParameter("action");
 
         if (action != null) {
@@ -52,16 +55,37 @@ public class BookController extends HttpServlet {
                 String bookID = request.getParameter("bookID");
                 String title = request.getParameter("title");
                 String datePublished = request.getParameter("datePublished");
+                String authorID = request.getParameter("authorID");
+                Book book = new Book(0);
                 switch (action) {
 
                     case "save":
-
-                        Book book = new Book(0);
-
+                        if(bookID == null || bookID.isEmpty()){
+                            book.setTitle(title);
+                            book.setDatePublished(datePublished);
+                            book.setAuthorID(authorService.getAuthorByID(authorID));
+                        } else {
+                            book = bookService.getBookByID(Integer.valueOf(bookID));
+                            book.setTitle(title);
+                            book.setDatePublished(datePublished);
+                            book.setAuthorID(authorService.getAuthorByID(authorID));
+                        }
+                    bookService.saveBook(book);
+                        break;
+                        
+                    case "delete":
+                        String [] ids = request.getParameterValues("boxes");
+                        for(String id : ids){
+                            bookService.deleteBook(Integer.valueOf(id));
+                        }
+                        break;
+                        
+                    default:
+                        break;
                 }
 
             } catch (Exception e) {
-
+                request.setAttribute("error", e.toString());
             }
 
         }

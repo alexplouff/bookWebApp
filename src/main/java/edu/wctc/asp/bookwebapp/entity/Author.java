@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.FetchType;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -42,7 +43,7 @@ public class Author implements Serializable {
     @Size(max = 50)
     @Column(name = "AuthorLastName")
     private String authorLastName;
-    @OneToMany(mappedBy = "authorID", cascade = {CascadeType.ALL, CascadeType.PERSIST}, targetEntity=Book.class)
+    @OneToMany(mappedBy = "authorID", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Collection<Book> bookCollection;
 
     public Author() {

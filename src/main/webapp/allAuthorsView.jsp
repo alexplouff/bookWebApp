@@ -13,7 +13,7 @@
     </head>
         <body>
             ${error}
-        <div id="tableData">
+        <div id="tableDataContainer">
             <form id="authorDeleteForm" action="AuthorController?action=delete" method="POST">
                 <table id="tableData" style="text-align: center;">
 
@@ -22,7 +22,7 @@
                     <th> First Name </th>
                     <th> Last Name </th>
                     <th> Delete </th>
-                    <th class="editable"> Edit </th>
+                    <th View</th>
                     </thead>
                     <tbody>
                         <c:forEach var="author" items="${authorList}" >
@@ -32,7 +32,7 @@
                                 <td>${author.authorFirstName}</td>
                                 <td>${author.authorLastName}</td>
                                 <td><input type="checkbox" value="${author.authorID}" name="boxes"/></td>
-                                <td><a class="editable"> Edit </a></td>
+                                <td><a href="AuthorController?action=viewAuthor&id=${author.authorID}"> View </a></td>
                             </tr>
 
                         </c:forEach>

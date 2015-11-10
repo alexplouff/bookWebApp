@@ -36,8 +36,18 @@ public class BookService {
         return bookRepo.findAll();
     }
     
+    public Book getBookByID(Integer id){
+        return bookRepo.findOne(id);
+    }
+    
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public void saveBook(Book book){
         bookRepo.save(book);
+    }
+    
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    public void deleteBook(Integer id){
+        bookRepo.delete(id);
+        bookRepo.flush();
     }
 }

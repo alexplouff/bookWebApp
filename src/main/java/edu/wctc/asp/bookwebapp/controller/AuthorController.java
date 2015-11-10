@@ -26,7 +26,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  */
 @WebServlet(name = "AuthorController", urlPatterns = {"/AuthorController"})
 public class AuthorController extends HttpServlet {
-
+    String resultPage = "/allAuthorsView.jsp";
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -53,30 +53,37 @@ public class AuthorController extends HttpServlet {
                 String authorID = request.getParameter("authorID");
                 String firstName = request.getParameter("firstName");
                 String lastName = request.getParameter("lastName");
-                
-                switch (action) {
+                Author author = new Author(0);
+                    switch (action) {
 
                     case "save":
 
                         if(authorID == null || authorID.isEmpty()){
-                            Author author = new Author(0);
                             author.setAuthorFirstName(firstName);
                             author.setAuthorLastName(lastName);
                             authorService.saveAuthor(author);
                         }
-                        
-                        
-                        
+                        else {
+                            author = authorService.getAuthorByID(authorID);
+                            author.setAuthorFirstName(firstName);
+                            author.setAuthorLastName(lastName);
+                            authorService.saveAuthor(author);
+                        }
                         break;
-
+                        
+                    case "viewAuthor":
+                        resultPage="/specificAuthorView.jsp";
+                            String autID = request.getParameter("id");
+                            author = authorService.getAuthorByID(autID);
+                            request.setAttribute("author", author);
+                            break;
+                        
                     case "delete":
                         
                         String [] deleteValues = request.getParameterValues("boxes");
                         for(String id : deleteValues){
                             authorService.deleteAuthors(Integer.valueOf(id));
                         }
-                        
-                        
                         break;
 
                     default:
@@ -97,7 +104,7 @@ public class AuthorController extends HttpServlet {
         }
 
         RequestDispatcher dispatcher
-                = getServletContext().getRequestDispatcher("/allAuthorsView.jsp");
+                = getServletContext().getRequestDispatcher(resultPage);
         dispatcher.forward(request, response);
 
     }

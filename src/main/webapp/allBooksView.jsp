@@ -12,18 +12,19 @@
         <title>JSP Page</title>
     </head>
     <body>
-
-        <div id="tableData">
+        ${error}
+        <div id="bookTableDataContainer">
             <form id="bookDeleteForm" action="BookController?action=delete" method="POST">
-                <table style="text-align: center;">
+                <table id="bookTableData" style="text-align: center;">
 
                     <thead>
                     <th> Book ID </th>
                     <th> Title </th>
                     <th> Date Published</th>
+                    <th> Author ID</th>
                     <th> Author First Name</th>
                     <th> Author Last Name</th>
-                    <th> Author ID</th>
+                    
                     </thead>
                     <tbody>
                         <c:forEach var="book" items="${bookList}" >
@@ -32,9 +33,10 @@
                                 <td>${book.bookID}</td>
                                 <td>${book.title}</td>
                                 <td>${book.datePublished}</td>
+                                <td>${book.authorID.authorID}</td>
                                 <td>${book.authorID.authorFirstName}</td>
                                 <td>${book.authorID.authorLastName}</td>
-                                <td>${book.authorID.authorID}</td>
+                                
                                 <td><input type="checkbox" value="${book.bookID}" name="boxes"/></td>
                                 <td>Edit</td>
                             </tr>
@@ -74,6 +76,10 @@
                         <td><input type="text" id="datePublished" name="datePublished" placeholder="Date Published" /></td>
                     </tr>
                     <tr>
+                        <td>Author ID</td>
+                        <td><input type="text" id="authorID" name="authorID" placeholder="Author ID" /></td>
+                    </tr>
+                    <tr>
                         <td></td>
                         <td><button type="submit" name="bookFormSubmitBtn" id="bookFormSubmitBtn">Submit</button> </td>
                     </tr>
@@ -83,5 +89,7 @@
             </form>
 
         </div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+        <script type="text/javascript" src="js.js"></script>
     </body>
 </html>
