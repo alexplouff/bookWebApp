@@ -74,7 +74,7 @@ public class AuthorController extends HttpServlet {
                     case "viewAuthor":
                         resultPage="/specificAuthorView.jsp";
                             String autID = request.getParameter("id");
-                            author = authorService.getAuthorByID(autID);
+                            author = authorService.getAuthorAndBookCollectionById(Integer.valueOf(autID));
                             request.setAttribute("author", author);
                             break;
                         

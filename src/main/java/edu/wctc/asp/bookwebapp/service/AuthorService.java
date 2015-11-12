@@ -41,6 +41,10 @@ public class AuthorService {
         return authorRepo.findOne(Integer.valueOf(ID));
     }
     
+    public Author getAuthorAndBookCollectionById(Integer id){
+        return authorRepo.findAuthorAndBookCollection(id);
+    }
+    
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public void deleteAuthors(Integer authorID){
         authorRepo.delete(authorID);
