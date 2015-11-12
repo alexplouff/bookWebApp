@@ -59,6 +59,13 @@ public class BookController extends HttpServlet {
                 Book book = new Book(0);
                 switch (action) {
 
+                    case "ajax":
+                        
+                        
+                        
+                        
+                        return;
+                    
                     case "save":
                         if(bookID == null || bookID.isEmpty()){
                             book.setTitle(title);
