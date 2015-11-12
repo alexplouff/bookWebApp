@@ -78,7 +78,7 @@ public class BookController extends HttpServlet {
                         for(String id : ids){
                             bookService.deleteBook(Integer.valueOf(id));
                         }
-                        break;
+                        break;  
                         
                     default:
                         break;
