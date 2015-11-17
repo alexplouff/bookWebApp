@@ -1,4 +1,4 @@
-package edu.wctc.web.demo.bookwebapp.util;
+package edu.wctc.web.asp.bookwebapp.util;
 
 import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 
@@ -22,11 +22,11 @@ public class ShaHashGeneratorApp {
         // modify these as necessary...
         String salt = "testuser@isp.com"; // username field in db
         String password = "testuser"; // password field in db
-        System.out.println(password + ": " + sha512(password,salt));
+        System.out.println(password + ":" + sha512(password,salt));
 
         salt = "testmgr@isp.com"; // username field in db
         password = "testmgr"; // password field in db
-        System.out.println(password + ": " + sha512(password,salt));
+        System.out.println(password + ":" + sha512(password,salt));
 
     }
 
@@ -35,7 +35,6 @@ public class ShaHashGeneratorApp {
             ShaPasswordEncoder pe = new ShaPasswordEncoder(512);
             pe.setIterations(1024);
             String hash = pe.encodePassword(pwd, salt);
-
             return hash;
      
     }
