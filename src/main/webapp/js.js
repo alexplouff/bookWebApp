@@ -1,7 +1,39 @@
-$(document).ready(function () {
-//   document.getElementById("add_editForm").reset();
 
+var authorTableBody = document.getElementById('authorTableData');
+var authorUrl = "AuthorController";
+var $body = $('body');
+$(document).ready(function () {
+
+    if ($body.attr('class') === "splash") {
+
+        $.ajax({
+            type: 'GET',
+            url: "AuthorController?action=listAjax",
+            success: function (authors) {
+                getAllAuthors(authors);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert("Could not get authors for this user due to: " + errorThrown.toString());
+            }
+        });
+
+    }
 });
+
+function getAllAuthors(authors) {
+    var index = 0;
+    var tableParts;
+    $.each(authors, function () {
+        index++;
+        tableParts = ["<tr id='row" + index.toString() + "'" + "class='authorTableDataRow' >",
+            "<td>", authors.authorId, "</td>",
+            "<td>", authors.firstName, "</td>",
+            "<td>", authors.lastName, "</td>",
+            //"<td>",authors.size,"</td>",
+            "</tr>"];
+    });
+    authorTableBody.append(tableParts.join());
+}
 
 $('#tableData tr').on('click', function () {
 
@@ -22,6 +54,12 @@ $("#bookTableData tr").on('click', function () {
         formObjects[i].val(row.cells[i].textContent);
     }
 });
+
+
+
+
+//    });
+//});
 
 /*
  $('#clearButton').on('click', function(){

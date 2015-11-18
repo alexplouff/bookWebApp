@@ -8,8 +8,13 @@ package edu.wctc.asp.bookwebapp.controller;
 import edu.wctc.asp.bookwebapp.entity.Author;
 import edu.wctc.asp.bookwebapp.service.AuthorService;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -26,7 +31,9 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  */
 @WebServlet(name = "AuthorController", urlPatterns = {"/AuthorController"})
 public class AuthorController extends HttpServlet {
+
     String resultPage = "/allAuthorsView.jsp";
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -49,39 +56,62 @@ public class AuthorController extends HttpServlet {
 
         if (action != null) {
             try {
-                
+
                 String authorID = request.getParameter("authorID");
                 String firstName = request.getParameter("firstName");
                 String lastName = request.getParameter("lastName");
                 Author author = new Author(0);
-                    switch (action) {
+                PrintWriter pw = response.getWriter();
+                boolean useAjax = false;
+                switch (action) {
+
+                    case "loadTable":
+                            
+                        List<Author> authors = authorService.getAllAuthors();
+                        JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
+                        
+                        authors.forEach((authorObj) ->{
+                            jsonArrayBuilder.add(
+                                 Json.createObjectBuilder()
+                                    .add("authorId", authorObj.getAuthorID())
+                                    .add("firstName", authorObj.getAuthorFirstName())
+                                    .add("lastName", authorObj.getAuthorLastName())
+                                    //.add("size", authorObj.getBookCollection().size())
+                            );
+                        });
+                        
+                    JsonArray authorsJson = jsonArrayBuilder.build();
+                    response.setContentType("application/json");
+                    pw.write(authorsJson.toString());
+                    pw.flush();
+                    return;
 
                     case "save":
-
-                        if(authorID == null || authorID.isEmpty()){
+                        if (authorID == null || authorID.isEmpty()) {
                             author.setAuthorFirstName(firstName);
                             author.setAuthorLastName(lastName);
                             authorService.saveAuthor(author);
-                        }
-                        else {
+
+                        } else {
                             author = authorService.getAuthorByID(authorID);
                             author.setAuthorFirstName(firstName);
                             author.setAuthorLastName(lastName);
                             authorService.saveAuthor(author);
+
                         }
                         break;
-                        
+
                     case "viewAuthor":
-                        resultPage="/specificAuthorView.jsp";
-                            String autID = request.getParameter("id");
-                            author = authorService.getAuthorAndBookCollectionById(Integer.valueOf(autID));
-                            request.setAttribute("author", author);
-                            break;
-                        
+                        resultPage = "/specificAuthorView.jsp";
+                        String autID = request.getParameter("id");
+                        author = authorService.getAuthorAndBookCollectionById(Integer.valueOf(autID));
+                        request.setAttribute("author", author);
+                        break;
+
                     case "delete":
-                        
-                        String [] deleteValues = request.getParameterValues("boxes");
-                        for(String id : deleteValues){
+
+                        String[] deleteValues = request.getParameterValues("boxes");
+                        for (String id : deleteValues) {
                             authorService.deleteAuthors(Integer.valueOf(id));
                         }
                         break;

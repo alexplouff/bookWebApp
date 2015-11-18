@@ -70,7 +70,7 @@
 	    password-parameter="j_password"
             login-processing-url="/j_spring_security_check"
             login-page="/login.jsp" 
-            default-target-url="/index.html"
+            default-target-url="/index.jsp"
             always-use-default-target="true"
             authentication-failure-url="/loginerror.jsp"/>
             

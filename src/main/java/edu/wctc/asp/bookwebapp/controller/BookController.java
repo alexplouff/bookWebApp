@@ -10,6 +10,7 @@ import edu.wctc.asp.bookwebapp.entity.Book;
 import edu.wctc.asp.bookwebapp.service.AuthorService;
 import edu.wctc.asp.bookwebapp.service.BookService;
 import java.io.IOException;
+import java.io.PrintWriter;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -47,7 +48,7 @@ public class BookController extends HttpServlet {
         BookService bookService = (BookService) ctx.getBean("bookService");
         AuthorService authorService = (AuthorService) ctx.getBean("authorService");
         String action = request.getParameter("action");
-
+        PrintWriter pw;
         if (action != null) {
 
             try {
@@ -60,6 +61,7 @@ public class BookController extends HttpServlet {
                 switch (action) {
 
                     case "ajax":
+                        pw = response.getWriter();
                         
                         
                         
