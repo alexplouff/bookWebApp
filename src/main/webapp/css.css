@@ -1,9 +1,14 @@
-
-
-#tableData th{
-    padding-left: 5%;
-    padding-right: 5%;
-    
-    
+*{
+    font-family:Merriweather;
 }
- 
+
+#authorTableDataContainer{
+    width: 90%;
+    height: 90%;
+    margin-left:5%;
+}
+
+#authorTableBody{
+    width: 45vw;
+    height: 25vh;
+}

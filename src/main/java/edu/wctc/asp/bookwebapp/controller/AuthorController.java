@@ -62,7 +62,6 @@ public class AuthorController extends HttpServlet {
                 String lastName = request.getParameter("lastName");
                 Author author = new Author(0);
                 PrintWriter pw = response.getWriter();
-                boolean useAjax = false;
                 switch (action) {
 
                     case "loadTable":

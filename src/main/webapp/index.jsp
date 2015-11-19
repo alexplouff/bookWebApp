@@ -6,9 +6,11 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <html>
+    
     <head>
         <title> Book - Author Splash</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link href="css.css" rel="stylesheet" type="text/css"/>
     </head>
     <body class="splash">
         
@@ -22,14 +24,14 @@
                     <th> Delete </th>
                     <th View</th>
                     </thead>
-                    <tbody id="authorTableData">
+                    <tbody id="authorTableBody">
 
                     </tbody>
 
                 </table>
             
         </div>
-        
+        <button id="btn" ><a href="href='AuthorController?action=loadTable'">"Click</a></button>
         
         
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>

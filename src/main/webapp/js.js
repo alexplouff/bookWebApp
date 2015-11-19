@@ -7,32 +7,41 @@ $(document).ready(function () {
     if ($body.attr('class') === "splash") {
 
         $.ajax({
-            type: 'GET',
-            url: "AuthorController?action=listAjax",
-            success: function (authors) {
-                getAllAuthors(authors);
+            type: "GET",
+            url: "AuthorController?action=loadTable",
+            success: function (author) {
+                getAllAuthors(author);
+                
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                alert("Could not get authors for this user due to: " + errorThrown.toString());
+                //alert("Could not get authors for this user due to: " + errorThrown.toString());
+            
             }
+            
         });
 
     }
 });
 
-function getAllAuthors(authors) {
+$('#btn').on('click', function(){
+    window.location.href = "AuthorController?action=loadTable";
+});
+
+function getAllAuthors(author) {
     var index = 0;
-    var tableParts;
-    $.each(authors, function () {
+    var row;
+    
+    $.each(author, function (author) {
+        console.log(this);
         index++;
-        tableParts = ["<tr id='row" + index.toString() + "'" + "class='authorTableDataRow' >",
-            "<td>", authors.authorId, "</td>",
-            "<td>", authors.firstName, "</td>",
-            "<td>", authors.lastName, "</td>",
+        row = "<tr id='row" + index + "' " + "class='authorTableDataRow' >"+
+            "<td>"+ this.authorId+ "</td>"+
+            "<td>"+ this.firstName+ "</td>"+
+            "<td>"+ this.lastName+ "</td>"+
             //"<td>",authors.size,"</td>",
-            "</tr>"];
+            "</tr>";
+            $('#authorTableBody').append(row);
     });
-    authorTableBody.append(tableParts.join());
 }
 
 $('#tableData tr').on('click', function () {
