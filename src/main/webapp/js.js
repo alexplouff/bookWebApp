@@ -37,6 +37,20 @@ $(document).ready(function () {
     }
 });
 
+function addBook(){
+    $.ajax({
+        type: 'POST',
+        contentType: 'application/json',
+        url: 'BookController?action=save',
+        dataType: 'json',
+        data: formToJSON(),
+        success: function(author){
+            getAllAuthors(author);
+        }
+    });
+            
+}
+
 function getAllAuthors(author) {
     var index = 0;
     var row;
@@ -47,7 +61,6 @@ function getAllAuthors(author) {
                 "<td>" + this.authorId + "</td>" +
                 "<td>" + this.firstName + "</td>" +
                 "<td>" + this.lastName + "</td>" +
-                //"<td>",authors.size,"</td>",
                 "</tr>";
         $('#authorTableBody').append(row);
     });
@@ -79,13 +92,17 @@ $('#tableData tr').on('click', function () {
 
 });
 
-$("#bookTableData tr").on('click', function () {
+var $tbody = $('#bookTableBody');
+
+$($tbody).on('click', 'tr', function () {
     var formObjects = [$('#bookID'), $('#title'), $('#datePublished'), $("#authorID")];
-    var table = document.getElementById("bookTableData");
-    var row = table.rows[this.rowIndex];
     for (var i = 0; i < formObjects.length; i++) {
-        formObjects[i].val(row.cells[i].textContent);
+        formObjects[i].val(this.cells[i].textContent);
     }
+});
+
+$('#bookSubmitBtn').on('click', function(){
+   addBook();
 });
 
 

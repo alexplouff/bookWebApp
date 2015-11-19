@@ -34,7 +34,6 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 @WebServlet(name = "BookController", urlPatterns = {"/BookController"})
 public class BookController extends HttpServlet {
 
-    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -53,8 +52,9 @@ public class BookController extends HttpServlet {
                 = WebApplicationContextUtils.getWebApplicationContext(sctx);
         BookService bookService = (BookService) ctx.getBean("bookService");
         AuthorService authorService = (AuthorService) ctx.getBean("authorService");
-        String action = request.getParameter("action");
         PrintWriter pw = response.getWriter();
+        String action = request.getParameter("action");
+
         if (action != null) {
 
             try {
@@ -67,28 +67,30 @@ public class BookController extends HttpServlet {
                 switch (action) {
 
                     case "loadTable":
-                        
-                        List<Book> bookList = new ArrayList<>(bookService.findAllBooks());
-                        JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
-                        
-                        bookList.forEach((bookObj) -> {
-                            jsonArrayBuilder.add(
-                                    Json.createObjectBuilder()
-                                        .add("bookId", bookObj.getBookID())
-                                        .add("title", bookObj.getTitle())
-                                        .add("datePublished", bookObj.getDatePublished().toString())
-                                        .add("authorId", bookObj.getAuthorID().getAuthorID())
-                            );
-                        });
-                        
-                    JsonArray authorsJson = jsonArrayBuilder.build();
-                    response.setContentType("application/json");
-                    pw.write(authorsJson.toString());
-                    pw.flush();
+
+//                        List<Book> bookList = new ArrayList<>(bookService.findAllBooks());
+//                        JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
+//
+//                        bookList.forEach((bookObj) -> {
+//                            jsonArrayBuilder.add(
+//                                    Json.createObjectBuilder()
+//                                    .add("bookId", bookObj.getBookID())
+//                                    .add("title", bookObj.getTitle())
+//                                    .add("datePublished", bookObj.getDatePublished().toString())
+//                                    .add("authorId", bookObj.getAuthorID().getAuthorID())
+//                            );
+//                        });
+//
+//                        JsonArray authorsJson = jsonArrayBuilder.build();
+//                        response.setContentType("application/json");
+//                        pw.write(authorsJson.toString());
+//                        pw.flush();
+
+                        buildJsonForView(pw, response, bookService);
                         return;
-                    
+
                     case "save":
-                        if(bookID == null || bookID.isEmpty()){
+                        if (bookID == null || bookID.isEmpty()) {
                             book.setTitle(title);
                             book.setDatePublished(datePublished);
                             book.setAuthorID(authorService.getAuthorByID(authorID));
@@ -98,16 +100,17 @@ public class BookController extends HttpServlet {
                             book.setDatePublished(datePublished);
                             book.setAuthorID(authorService.getAuthorByID(authorID));
                         }
-                    bookService.saveBook(book);
-                        break;
-                        
+                        bookService.saveBook(book);
+                        this.buildJsonForView(pw, response, bookService);
+                        return;
+
                     case "delete":
-                        String [] ids = request.getParameterValues("boxes");
-                        for(String id : ids){
+                        String[] ids = request.getParameterValues("boxes");
+                        for (String id : ids) {
                             bookService.deleteBook(Integer.valueOf(id));
                         }
-                        break;  
-                        
+                        break;
+
                     default:
                         break;
                 }
@@ -130,6 +133,25 @@ public class BookController extends HttpServlet {
 
     }
 
+    private void buildJsonForView(PrintWriter pw, HttpServletResponse response, BookService bookService){
+        List<Book> bookList = new ArrayList<>(bookService.findAllBooks());
+                        JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
+                        
+                        bookList.forEach((bookObj) -> {
+                            jsonArrayBuilder.add(
+                                    Json.createObjectBuilder()
+                                        .add("bookId", bookObj.getBookID())
+                                        .add("title", bookObj.getTitle())
+                                        .add("datePublished", bookObj.getDatePublished().toString())
+                                        .add("authorId", bookObj.getAuthorID().getAuthorID())
+                            );
+                        });
+                        
+                    JsonArray authorsJson = jsonArrayBuilder.build();
+                    response.setContentType("application/json");
+                    pw.write(authorsJson.toString());
+                    pw.flush();
+    }
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

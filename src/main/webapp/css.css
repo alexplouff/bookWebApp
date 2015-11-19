@@ -6,21 +6,42 @@ html, body{
     height:100vh;
 }
 
-#authorContainer, bookContainer{
-    width: 90%;
-    height: 90%;
+#bookContainer, #authorContainer{
+    width: 90vw;
+    height: 50vh;
+}
+
+
+#bookTable{
+    float:left;
+    width:50vw;
 }
 
 #bookContainer{
+    margin-top:5%;
+    margin-left:7%;
+    margin-bottom: 10%;
+}
+
+#bookForm{
+    padding-top: 5%;
     float:right;
+    margin-right:8%;
+    width:25%;
+}
+
+#bokForm tr{
+    width: 20%;
+}
+
+#bookForm input{
+    padding-top:2%;
+    padding-bottom: 2%;
+    
 }
 
 #authorContainer{
     margin-right:10%
 }
 
-#authorTableBody{
-    width: 45vw;
-    height: 25vh;
-}
 
