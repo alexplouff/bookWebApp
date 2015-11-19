@@ -14,7 +14,26 @@
     </head>
     <body class="splash">
         
-         <div id="authorTableDataContainer">
+        
+     <div id="bookContainer">
+                <table id="bookTable" style="text-align: center;">
+
+                    <thead>
+                    <th> Book ID </th>
+                    <th> Title </th>
+                    <th> Date Published </th>
+                    <th> Delete </th>
+                    <th> View</th>
+                    </thead>
+                    <tbody id="bookTableBody">
+                        
+                    </tbody>
+
+                </table>
+            
+        </div>
+        
+         <div id="authorContainer">
                 <table id="authorTable" style="text-align: center;">
 
                     <thead>
@@ -31,19 +50,12 @@
                 </table>
             
         </div>
-        <button id="btn" ><a href="href='AuthorController?action=loadTable'">"Click</a></button>
-        
+            
+            
         
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
         <script type="text/javascript" src="js.js"></script>
         
         
-        
-        
-        
-        
-        
-        
-
     </body>
 </html>

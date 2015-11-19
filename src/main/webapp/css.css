@@ -2,13 +2,25 @@
     font-family:Merriweather;
 }
 
-#authorTableDataContainer{
+html, body{
+    height:100vh;
+}
+
+#authorContainer, bookContainer{
     width: 90%;
     height: 90%;
-    margin-left:5%;
+}
+
+#bookContainer{
+    float:right;
+}
+
+#authorContainer{
+    margin-right:10%
 }
 
 #authorTableBody{
     width: 45vw;
     height: 25vh;
 }
+

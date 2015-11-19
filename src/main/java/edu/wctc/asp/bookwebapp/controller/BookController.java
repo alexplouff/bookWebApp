@@ -11,6 +11,12 @@ import edu.wctc.asp.bookwebapp.service.AuthorService;
 import edu.wctc.asp.bookwebapp.service.BookService;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -48,7 +54,7 @@ public class BookController extends HttpServlet {
         BookService bookService = (BookService) ctx.getBean("bookService");
         AuthorService authorService = (AuthorService) ctx.getBean("authorService");
         String action = request.getParameter("action");
-        PrintWriter pw;
+        PrintWriter pw = response.getWriter();
         if (action != null) {
 
             try {
@@ -60,12 +66,25 @@ public class BookController extends HttpServlet {
                 Book book = new Book(0);
                 switch (action) {
 
-                    case "ajax":
-                        pw = response.getWriter();
+                    case "loadTable":
                         
+                        List<Book> bookList = new ArrayList<>(bookService.findAllBooks());
+                        JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
                         
+                        bookList.forEach((bookObj) -> {
+                            jsonArrayBuilder.add(
+                                    Json.createObjectBuilder()
+                                        .add("bookId", bookObj.getBookID())
+                                        .add("title", bookObj.getTitle())
+                                        .add("datePublished", bookObj.getDatePublished().toString())
+                                        .add("authorId", bookObj.getAuthorID().getAuthorID())
+                            );
+                        });
                         
-                        
+                    JsonArray authorsJson = jsonArrayBuilder.build();
+                    response.setContentType("application/json");
+                    pw.write(authorsJson.toString());
+                    pw.flush();
                         return;
                     
                     case "save":

@@ -11,36 +11,60 @@ $(document).ready(function () {
             url: "AuthorController?action=loadTable",
             success: function (author) {
                 getAllAuthors(author);
-                
+
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 //alert("Could not get authors for this user due to: " + errorThrown.toString());
-            
+
             }
-            
+
+        });
+
+        $.ajax({
+            type: "GET",
+            url: "BookController?action=loadTable",
+            success: function ( book) {
+                getAllBooks(book);
+
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                //alert("Could not get authors for this user due to: " + errorThrown.toString());
+
+            }
+
         });
 
     }
 });
 
-$('#btn').on('click', function(){
-    window.location.href = "AuthorController?action=loadTable";
-});
-
 function getAllAuthors(author) {
     var index = 0;
     var row;
-    
-    $.each(author, function (author) {
-        console.log(this);
+
+    $.each(author, function () {
         index++;
-        row = "<tr id='row" + index + "' " + "class='authorTableDataRow' >"+
-            "<td>"+ this.authorId+ "</td>"+
-            "<td>"+ this.firstName+ "</td>"+
-            "<td>"+ this.lastName+ "</td>"+
-            //"<td>",authors.size,"</td>",
-            "</tr>";
-            $('#authorTableBody').append(row);
+        row = "<tr id='row" + index + "' " + "class='authorTableDataRow' >" +
+                "<td>" + this.authorId + "</td>" +
+                "<td>" + this.firstName + "</td>" +
+                "<td>" + this.lastName + "</td>" +
+                //"<td>",authors.size,"</td>",
+                "</tr>";
+        $('#authorTableBody').append(row);
+    });
+}
+
+function getAllBooks(book) {
+    var row;
+    var index = 0;
+    $.each(book, function () {
+        index++;
+        row = "<tr id='bookRow" + index + "' " + "class='bookTableDataRow'>" +
+                "<td>" + this.bookId + "</td>" +
+                "<td>" + this.title + "</td>" +
+                "<td>" + this.datePublished + "</td>" +
+                "<td>" + this.authorId + "</td>" +
+                "</tr>";
+        $('#bookTableBody').append(row);
     });
 }
 
