@@ -15,7 +15,11 @@
     <body class="splash">
 
         <div id="masterContainer">
-
+           
+            
+            <a href='<%= this.getServletContext().getContextPath() + "/j_spring_security_logout"%>'>Log Me Out</a>
+        
+            
             <div id="header">
                 <ul>
                     <li><a href="#bookContainer">Books</a></li>
@@ -26,6 +30,7 @@
             </div>
 
             <div id="bookContainer">
+                <form id="bookTableForm" name="bookTableForm" method="POST" >
                 <table id="bookTable" style="text-align: center;">
 
                     <thead>
@@ -37,30 +42,30 @@
                     <tbody id="bookTableBody">
 
                     </tbody>
-
                 </table>
-
-                <form id="bookForm" action="BookController?action=save" method="POST" >
+                </form>
+                <button id="bookDeleteBtn" name="bookDeleteBtn" type="button">Delete</button>
+                <form id="bookForm" name="bookForm" action="BookController?action=save" method="POST" >
                     <table>
                         <tr>
                             <td>Book ID: </td>
-                            <td><input typpe="text" id="bookID" name="bookID" placeholder="Book ID" readonly /></td>
+                            <td><input type="text" id="bookID" name="bookID" placeholder="Book ID" readonly /></td>
                         </tr>
                         <tr>
                             <td>Title: </td>
-                            <td><input typpe="text" id="title" name="title" placeholder="Title"  /></td>
+                            <td><input type="text" id="title" name="title" placeholder="Title"  /></td>
                         </tr>
                         <tr>
                             <td>Date Published: </td>
-                            <td><input typpe="text" id="datePublished" name="datePublished" placeholder="Date Published" /></td>
+                            <td><input type="text" id="datePublished" name="datePublished" placeholder="Date Published" /></td>
                         </tr>
                         <tr>
                             <td>Author ID: </td>
-                            <td><input typpe="text" id="authorID" name="authorID" placeholder="Author ID" /></td>
+                            <td><input type="text" id="authorID" name="authorID" placeholder="Author ID" /></td>
                         </tr>
                         <tr>
                             <td></td>
-                            <td><button typpe="submit" id="bookSubmitBtn" name="bookSubmitBtn">Save</button></td>
+                            <td><button type="button" id="bookSubmitBtn" name="bookSubmitBtn">Save</button></td>
                         </tr>
                     </table>
                 </form>
@@ -75,7 +80,6 @@
                     <th> First Name </th>
                     <th> Last Name </th>
                     <th> Delete </th>
-                    <th View</th>
                     </thead>
                     <tbody id="authorTableBody">
 
@@ -84,7 +88,6 @@
                 </table>
 
             </div>
-
         </div>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>

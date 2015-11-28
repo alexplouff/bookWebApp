@@ -23,9 +23,8 @@ $(document).ready(function () {
         $.ajax({
             type: "GET",
             url: "BookController?action=loadTable",
-            success: function ( book) {
-                getAllBooks(book);
-
+            success: function (books) {
+                getAllBooks(books);
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 //alert("Could not get authors for this user due to: " + errorThrown.toString());
@@ -37,24 +36,52 @@ $(document).ready(function () {
     }
 });
 
-function addBook(){
+function saveBook(){
+    var $serializedForm = $('#bookForm').serialize();
     $.ajax({
         type: 'POST',
-        contentType: 'application/json',
         url: 'BookController?action=save',
-        dataType: 'json',
-        data: formToJSON(),
-        success: function(author){
-            getAllAuthors(author);
+        data: $serializedForm,
+        
+        success: function(books){
+            deleteTableRows();
+            getAllBooks(books);
+            
         }
     });
-            
+}
+
+function deleteBooks(){
+    var $serializedTblForm = $('#bookTableForm').serialize();
+    $.ajax({
+        type: 'POST',
+        url: 'BookController?action=delete',
+        data: $serializedTblForm(),
+        
+        success: function(books){
+            getAllBooks(books);
+        }
+    });
+       
+}
+
+function deleteTableRows(){
+    $('#bookTable tr').remove();
+}
+
+function formToJSON() {
+	return JSON.stringify({
+		"bookID": $('#bookID').val(),
+		"title": $('#title').val(),
+		"datePublished": $('#datePublished').val(), 
+		"authorID": $('#authorID').val()
+		});
 }
 
 function getAllAuthors(author) {
     var index = 0;
     var row;
-
+    
     $.each(author, function () {
         index++;
         row = "<tr id='row" + index + "' " + "class='authorTableDataRow' >" +
@@ -66,31 +93,33 @@ function getAllAuthors(author) {
     });
 }
 
-function getAllBooks(book) {
+function getAllBooks(books) {
     var row;
     var index = 0;
-    $.each(book, function () {
+    
+    $.each(books, function () {
         index++;
         row = "<tr id='bookRow" + index + "' " + "class='bookTableDataRow'>" +
                 "<td>" + this.bookId + "</td>" +
                 "<td>" + this.title + "</td>" +
                 "<td>" + this.datePublished + "</td>" +
                 "<td>" + this.authorId + "</td>" +
+                "<td> <input type='checkbox' class='deleteBoxes' name='deleteBoxes' value='"+this.bookId+"' />  </td>" +
                 "</tr>";
         $('#bookTableBody').append(row);
     });
 }
 
-$('#tableData tr').on('click', function () {
-
-    var formObjects = [$('#authorID'), $('#firstName'), $('#lastName')];
-    var table = document.getElementById("tableData");
-    var row = table.rows[this.rowIndex];
-    for (var i = 0; i < formObjects.length; i++) {
-        formObjects[i].val(row.cells[i].textContent);
-    }
-
-});
+//$('#tableData tr').on('click', function () {
+//
+//    var formObjects = [$('#authorID'), $('#firstName'), $('#lastName')];
+//    var table = document.getElementById("tableData");
+//    var row = table.rows[this.rowIndex];
+//    for (var i = 0; i < formObjects.length; i++) {
+//        formObjects[i].val(row.cells[i].textContent);
+//    }
+//
+//});
 
 var $tbody = $('#bookTableBody');
 
@@ -102,9 +131,25 @@ $($tbody).on('click', 'tr', function () {
 });
 
 $('#bookSubmitBtn').on('click', function(){
-   addBook();
+   saveBook();
 });
 
+$('#bookDeleteBtn').on('click', function(){
+    deleteBooks();
+    
+});
+
+function getCheckBoxValues(){
+    var x = document.getElementsByClassName('deleteBoxes');
+    var values = [];
+    for(var i = 0; i < x.length; i++){
+        if(x[i].checked){
+           values.push(x[i].value);
+        }
+    }
+    return values;
+    
+}
 
 
 

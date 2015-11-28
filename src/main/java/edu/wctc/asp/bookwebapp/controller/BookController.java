@@ -54,37 +54,19 @@ public class BookController extends HttpServlet {
         AuthorService authorService = (AuthorService) ctx.getBean("authorService");
         PrintWriter pw = response.getWriter();
         String action = request.getParameter("action");
-
-        if (action != null) {
-
-            try {
-
                 String bookID = request.getParameter("bookID");
                 String title = request.getParameter("title");
                 String datePublished = request.getParameter("datePublished");
                 String authorID = request.getParameter("authorID");
+        if (action != null) {
+
+            try {
+
+
                 Book book = new Book(0);
                 switch (action) {
 
                     case "loadTable":
-
-//                        List<Book> bookList = new ArrayList<>(bookService.findAllBooks());
-//                        JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
-//
-//                        bookList.forEach((bookObj) -> {
-//                            jsonArrayBuilder.add(
-//                                    Json.createObjectBuilder()
-//                                    .add("bookId", bookObj.getBookID())
-//                                    .add("title", bookObj.getTitle())
-//                                    .add("datePublished", bookObj.getDatePublished().toString())
-//                                    .add("authorId", bookObj.getAuthorID().getAuthorID())
-//                            );
-//                        });
-//
-//                        JsonArray authorsJson = jsonArrayBuilder.build();
-//                        response.setContentType("application/json");
-//                        pw.write(authorsJson.toString());
-//                        pw.flush();
 
                         buildJsonForView(pw, response, bookService);
                         return;
@@ -101,11 +83,12 @@ public class BookController extends HttpServlet {
                             book.setAuthorID(authorService.getAuthorByID(authorID));
                         }
                         bookService.saveBook(book);
-                        this.buildJsonForView(pw, response, bookService);
+                        
+                        buildJsonForView(pw, response, bookService);
                         return;
 
                     case "delete":
-                        String[] ids = request.getParameterValues("boxes");
+                        String[] ids = request.getParameterValues("deleteBoxes");
                         for (String id : ids) {
                             bookService.deleteBook(Integer.valueOf(id));
                         }
@@ -117,19 +100,19 @@ public class BookController extends HttpServlet {
 
             } catch (Exception e) {
                 request.setAttribute("error", e.toString());
+               
             }
-
+            return;
         }
+//        try {
+//            request.setAttribute("bookList", bookService.findAllBooks());
+//        } catch (Exception e) {
+//            request.setAttribute("error", e.toString());
+//        }
 
-        try {
-            request.setAttribute("bookList", bookService.findAllBooks());
-        } catch (Exception e) {
-            request.setAttribute("error", e.toString());
-        }
-
-        RequestDispatcher dispatcher
-                = getServletContext().getRequestDispatcher("/allBooksView.jsp");
-        dispatcher.forward(request, response);
+//        RequestDispatcher dispatcher
+//                = getServletContext().getRequestDispatcher("/allBooksView.jsp");
+//        dispatcher.forward(request, response);
 
     }
 
