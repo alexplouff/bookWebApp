@@ -56,9 +56,10 @@ function deleteBooks(){
     $.ajax({
         type: 'POST',
         url: 'BookController?action=delete',
-        data: $serializedTblForm(),
+        data: $serializedTblForm,
         
         success: function(books){
+            deleteTableRows();
             getAllBooks(books);
         }
     });

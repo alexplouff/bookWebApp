@@ -45,6 +45,7 @@
                 </table>
                 </form>
                 <button id="bookDeleteBtn" name="bookDeleteBtn" type="button">Delete</button>
+                <sec:authorize access="hasAnyRole('ROLE_MGR')">
                 <form id="bookForm" name="bookForm" action="BookController?action=save" method="POST" >
                     <table>
                         <tr>
@@ -71,6 +72,7 @@
                 </form>
 
             </div>
+                </sec:authorize>
 
             <div id="authorContainer">
                 <table id="authorTable" style="text-align: center;">
