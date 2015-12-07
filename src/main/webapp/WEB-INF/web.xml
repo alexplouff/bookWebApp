@@ -51,4 +51,16 @@
             30
         </session-timeout>
     </session-config>
+    
+    <servlet>
+        <servlet-name>exporter</servlet-name>
+        <servlet-class>org.springframework.data.rest.webmvc.RepositoryRestDispatcherServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>exporter</servlet-name>
+        <url-pattern>/api/v1/*</url-pattern>
+    </servlet-mapping>
+    <!-- end spring rest -->
 </web-app>

@@ -60,6 +60,9 @@
         <sec:intercept-url pattern="/loginerror.jsp" 
                            access="isAnonymous()" requires-channel="https"/>
         
+        <sec:intercept-url pattern="/ap/v1" method="DELETE"
+                           access="ROLE_MGR" requires-channel="https" />
+        
         <sec:intercept-url 
             pattern="/**" 
             access="hasAnyRole('ROLE_USER', 'ROLE_MGR')" requires-channel="https" />
