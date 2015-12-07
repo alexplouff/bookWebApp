@@ -57,6 +57,11 @@ public class BookService {
     public List getAllBookRecords() throws SQLException, ClassNotFoundException, ParseException {
         return dao.getAllRecords();
     }
+    
+    public Author getAuthorByID(int id){
+        return
+    }
+    
 
     public static void main(String[] args) throws Exception {
         SQL_Data_Provider data = new SQL_Data_Provider("com.mysql.jdbc.Driver", "jdbc:mysql://localhost:3306/Client?zeroDateTimeBehavior=convertToNull",

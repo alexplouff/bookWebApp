@@ -31,7 +31,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author alex
  */
-@WebServlet(name = "Book_AuthorController", urlPatterns = {"/bookAuthorControls"})
+//@WebServlet(name = "Book_AuthorController", urlPatterns = {"/bookAuthorControls"})
 public class Book_AuthorController extends HttpServlet {
 
     private String resultPage;
@@ -99,9 +99,11 @@ public class Book_AuthorController extends HttpServlet {
                             values.add(request.getParameter("datePublished"));
                             values.add(request.getParameter("authorID"));
                             String bookID = request.getParameter("bookID");
-
+                            String authorID = request.getParameter("authorID");
+                            
                             if (bookID.matches("\\d+")) {            // Update
                                 values.add(0, bookID);
+                                
                                 service.updateBookByID(values);
                                 request.setAttribute("bookRecordsResult", service.getAllBookRecords());
                             } else {

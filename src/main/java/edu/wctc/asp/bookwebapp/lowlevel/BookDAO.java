@@ -145,6 +145,10 @@ public class BookDAO implements DAO_Strategy {
         accessor.updateRecord(DATABASE.concat(".".concat(BOOK_TABLE)), AUTHOR_COLUMNS, values, AUTHOR_PRIMARY_KEY, author.getId());
     }
     
+    public Author getAuthorById(int id) throws ClassNotFoundException, SQLException{
+        accessor.getRecords("Library.Author");
+    }
+    
     
     public static void main(String[] args) throws Exception{
         SQL_Data_Provider data = new SQL_Data_Provider("com.mysql.jdbc.Driver", "jdbc:mysql://localhost:3306/Client?zeroDateTimeBehavior=convertToNull",
