@@ -15,11 +15,11 @@
     <body class="splash">
 
         <div id="masterContainer">
-           
-            
+
+
             <a href='<%= this.getServletContext().getContextPath() + "/j_spring_security_logout"%>'>Log Me Out</a>
-        
-            
+
+
             <div id="header">
                 <ul>
                     <li><a href="#bookContainer">Books</a></li>
@@ -31,63 +31,87 @@
 
             <div id="bookContainer">
                 <form id="bookTableForm" name="bookTableForm" method="POST" >
-                <table id="bookTable" style="text-align: center;">
+                    <table id="bookTable" style="text-align: center;">
 
-                    <thead>
-                    <th> Book ID </th>
-                    <th> Title </th>
-                    <th> Date Published </th>
-                    <th> Author ID </th>
-                    </thead>
-                    <tbody id="bookTableBody">
+                        <thead>
+                        <th> Book ID </th>
+                        <th> Title </th>
+                        <th> Date Published </th>
+                        <th> Author ID </th>
+                        </thead>
+                        <tbody id="bookTableBody">
 
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
                 </form>
                 <button id="bookDeleteBtn" name="bookDeleteBtn" type="button">Delete</button>
                 <sec:authorize access="hasAnyRole('ROLE_MGR')">
-                <form id="bookForm" name="bookForm" action="BookController?action=save" method="POST" >
+                    <form id="bookForm" name="bookForm" action="BookController?action=save" method="POST" >
+                        <table>
+                            <tr>
+                                <td>Book ID: </td>
+                                <td><input type="text" id="bookID" name="bookID" placeholder="Book ID" readonly /></td>
+                            </tr>
+                            <tr>
+                                <td>Title: </td>
+                                <td><input type="text" id="title" name="title" placeholder="Title"  /></td>
+                            </tr>
+                            <tr>
+                                <td>Date Published: </td>
+                                <td><input type="text" id="datePublished" name="datePublished" placeholder="Date Published" /></td>
+                            </tr>
+                            <tr>
+                                <td>Author ID: </td>
+                                <td><input type="text" id="authorID" name="authorID" placeholder="Author ID" /></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td><button type="button" id="bookSubmitBtn" name="bookSubmitBtn">Save</button></td>
+                            </tr>
+                        </table>
+                    </form>
+
+                </div>
+            </sec:authorize>
+
+            <div id="authorContainer"> 
+                
+                <form id="authorTableForm" name="authorTableForm" action="authorController?action=save" method="POST" >
+                    <table id="authorTable" style="text-align: center;">
+
+                        <thead>
+                        <th> Author ID </th>
+                        <th> First Name </th>
+                        <th> Last Name </th>
+                        <th> Delete </th>
+                        </thead>
+                        <tbody id="authorTableBody">
+
+                        </tbody>
+                    </table>
+                </form>
+               
+                
+                <form id="authorForm" name="authorForm" action="AuthorController?action=save" method="POST" >
                     <table>
                         <tr>
-                            <td>Book ID: </td>
-                            <td><input type="text" id="bookID" name="bookID" placeholder="Book ID" readonly /></td>
-                        </tr>
-                        <tr>
-                            <td>Title: </td>
-                            <td><input type="text" id="title" name="title" placeholder="Title"  /></td>
-                        </tr>
-                        <tr>
-                            <td>Date Published: </td>
-                            <td><input type="text" id="datePublished" name="datePublished" placeholder="Date Published" /></td>
-                        </tr>
-                        <tr>
                             <td>Author ID: </td>
-                            <td><input type="text" id="authorID" name="authorID" placeholder="Author ID" /></td>
+                            <td><input type="text" id="authorId" name="authorId" placeholder="Author ID" readonly /></td>
                         </tr>
                         <tr>
-                            <td></td>
-                            <td><button type="button" id="bookSubmitBtn" name="bookSubmitBtn">Save</button></td>
+                            <td>First Name: </td>
+                            <td><input type="text" id="firstName" name="firstName" placeholder="First Name"  /></td>
+                        </tr>
+                        <tr>
+                            <td>Last Name: </td>
+                            <td><input type="text" id="lastName" name="lastName" placeholder="Last Name" /></td>
+                        </tr>
+                        <tr>
+                            <td> <button type="button" id="authorDeleteBtn" name="authorDeleteBtn">Delete</button></td>
+                            <td><button type="button" id="authorSubmitBtn" name="authorSubmitBtn">Save</button></td>
                         </tr>
                     </table>
                 </form>
-
-            </div>
-                </sec:authorize>
-
-            <div id="authorContainer">
-                <table id="authorTable" style="text-align: center;">
-
-                    <thead>
-                    <th> Author ID </th>
-                    <th> First Name </th>
-                    <th> Last Name </th>
-                    <th> Delete </th>
-                    </thead>
-                    <tbody id="authorTableBody">
-
-                    </tbody>
-
-                </table>
 
             </div>
         </div>

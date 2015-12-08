@@ -6,7 +6,9 @@
 package edu.wctc.asp.bookwebapp.controller;
 
 import edu.wctc.asp.bookwebapp.entity.Author;
+import edu.wctc.asp.bookwebapp.entity.Book;
 import edu.wctc.asp.bookwebapp.service.AuthorService;
+import edu.wctc.asp.bookwebapp.service.BookService;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
@@ -66,23 +68,7 @@ public class AuthorController extends HttpServlet {
 
                     case "loadTable":
                             
-                        List<Author> authors = authorService.getAllAuthors();
-                        JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
-                        
-                        authors.forEach((authorObj) ->{
-                            jsonArrayBuilder.add(
-                                 Json.createObjectBuilder()
-                                    .add("authorId", authorObj.getAuthorID())
-                                    .add("firstName", authorObj.getAuthorFirstName())
-                                    .add("lastName", authorObj.getAuthorLastName())
-                                    //.add("size", authorObj.getBookCollection().size())
-                            );
-                        });
-                        
-                    JsonArray authorsJson = jsonArrayBuilder.build();
-                    response.setContentType("application/json");
-                    pw.write(authorsJson.toString());
-                    pw.flush();
+                        buildJsonForView(pw, response, authorService);
                     return;
 
                     case "save":
@@ -96,9 +82,9 @@ public class AuthorController extends HttpServlet {
                             author.setAuthorFirstName(firstName);
                             author.setAuthorLastName(lastName);
                             authorService.saveAuthor(author);
-
                         }
-                        break;
+                        buildJsonForView(pw, response, authorService);
+                        return;
 
                     case "viewAuthor":
                         resultPage = "/specificAuthorView.jsp";
@@ -109,14 +95,15 @@ public class AuthorController extends HttpServlet {
 
                     case "delete":
 
-                        String[] deleteValues = request.getParameterValues("boxes");
+                        String[] deleteValues = request.getParameterValues("authorDeleteBoxes");
                         for (String id : deleteValues) {
                             authorService.deleteAuthors(Integer.valueOf(id));
                         }
-                        break;
+                        buildJsonForView(pw, response, authorService);
+                        return;
 
                     default:
-                        break;
+                        return;
                 }
 
             } catch (Exception e) {
@@ -136,6 +123,26 @@ public class AuthorController extends HttpServlet {
                 = getServletContext().getRequestDispatcher(resultPage);
         dispatcher.forward(request, response);
 
+    }
+    
+        private void buildJsonForView(PrintWriter pw, HttpServletResponse response, AuthorService authorService){
+        List<Author> authorList = new ArrayList<>(authorService.getAllAuthors());
+                        JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
+                        
+                        authorList.forEach((authorObj) -> {
+                            jsonArrayBuilder.add(
+                                 Json.createObjectBuilder()
+                                    .add("authorId", authorObj.getAuthorID())
+                                    .add("firstName", authorObj.getAuthorFirstName())
+                                    .add("lastName", authorObj.getAuthorLastName())
+                            );
+                        });
+                        
+                        
+                    JsonArray authorsJson = jsonArrayBuilder.build();
+                    response.setContentType("application/json");
+                    pw.write(authorsJson.toString());
+                    pw.flush();
     }
 
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

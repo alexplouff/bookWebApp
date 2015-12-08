@@ -51,6 +51,20 @@ function saveBook(){
     });
 }
 
+function saveAuthor(){
+    var $serializedForm = $('#bookForm').serialize();
+    $.ajax({
+        type: 'POST',
+        url: 'AuthorController?action=save',
+        data : $serializedForm,
+        
+        success: function(authors){
+            deleteAuthorTableRows();
+            getAllAuthors(authors);
+        }
+    });
+}
+
 function deleteBooks(){
     var $serializedTblForm = $('#bookTableForm').serialize();
     $.ajax({
@@ -61,16 +75,31 @@ function deleteBooks(){
         success: function(books){
             deleteTableRows();
             getAllBooks(books);
-        },
-        fail: function(error){
-            console.log(error);
         }
     });
        
 }
 
+function deleteAuthors(){
+    var $serializedTblForm = $('#authorTableForm').serialize();
+        $.ajax({
+        type: 'POST',
+        url: 'AuthorController?action=delete',
+        data: $serializedTblForm,
+        dataType: 'json',
+        success: function(authors){
+            deleteAuthorTableRows();
+            getAllAuthors(authors);
+        }
+    });
+}
+
 function deleteTableRows(){
     $('#bookTable tr').remove();
+}
+
+function deleteAuthorTableRows(){
+    $('#authorTable tr').remove();
 }
 
 function formToJSON() {
@@ -92,6 +121,7 @@ function getAllAuthors(author) {
                 "<td>" + this.authorId + "</td>" +
                 "<td>" + this.firstName + "</td>" +
                 "<td>" + this.lastName + "</td>" +
+                "<td> <input type='checkbox' class='authorDeleteBoxes' name='authorDeleteBoxes' value='"+this.authorId+"' />  </td>" +
                 "</tr>";
         $('#authorTableBody').append(row);
     });
@@ -114,26 +144,24 @@ function getAllBooks(books) {
     });
 }
 
-//$('#tableData tr').on('click', function () {
-//
-//    var formObjects = [$('#authorID'), $('#firstName'), $('#lastName')];
-//    var table = document.getElementById("tableData");
-//    var row = table.rows[this.rowIndex];
-//    for (var i = 0; i < formObjects.length; i++) {
-//        formObjects[i].val(row.cells[i].textContent);
-//    }
-//
-//});
+var $bookTbody = $('#bookTableBody');
 
-var $tbody = $('#bookTableBody');
-
-$($tbody).on('click', 'tr', function () {
-    var formObjects = [$('#bookID'), $('#title'), $('#datePublished'), $("#authorID")];
+$($bookTbody).on('click', 'tr', function () {
+    var formObjects = [$('#authorId'), $('#firstName'), $('#lastName')];
     for (var i = 0; i < formObjects.length; i++) {
         formObjects[i].val(this.cells[i].textContent);
     }
 });
 
+var $authorTbody = $('#authorTableBody');
+
+$($authorTbody).on('click', 'tr', function () {
+    var formObjects = [$('#authorId'), $('#firstName'), $('#lastName')];
+    for (var i = 0; i < formObjects.length; i++) {
+        formObjects[i].val(this.cells[i].textContent);
+    }
+});
+ 
 $('#bookSubmitBtn').on('click', function(){
    saveBook();
 });
@@ -142,6 +170,16 @@ $('#bookDeleteBtn').on('click', function(){
     deleteBooks();
     
 });
+
+$('#authorSubmitBtn').on('click', function(){
+   saveAuthor();
+});
+
+$('#authorDeleteBtn').on('click', function(){
+    deleteAuthors();
+    
+});
+
 
 function getCheckBoxValues(){
     var x = document.getElementsByClassName('deleteBoxes');

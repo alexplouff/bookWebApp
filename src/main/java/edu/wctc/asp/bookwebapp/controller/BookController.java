@@ -93,7 +93,7 @@ public class BookController extends HttpServlet {
                             bookService.deleteBook(Integer.valueOf(id));
                         }
                         buildJsonForView(pw, response, bookService);
-                        break;
+                        return;
 
                     default:
                         break;
