@@ -57,10 +57,13 @@ function deleteBooks(){
         type: 'POST',
         url: 'BookController?action=delete',
         data: $serializedTblForm,
-        
+        dataType: 'json',
         success: function(books){
             deleteTableRows();
             getAllBooks(books);
+        },
+        fail: function(error){
+            console.log(error);
         }
     });
        

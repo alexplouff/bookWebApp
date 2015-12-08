@@ -92,6 +92,7 @@ public class BookController extends HttpServlet {
                         for (String id : ids) {
                             bookService.deleteBook(Integer.valueOf(id));
                         }
+                        buildJsonForView(pw, response, bookService);
                         break;
 
                     default:
